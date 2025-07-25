@@ -1,0 +1,276 @@
+/*CSS Styles for Wear Prediction Model
+Author: Komal Nayan Galla
+*/
+
+body {
+   background-image: linear-gradient(to left, purple, red);
+   color: white;
+   font-family: Arial, sans-serif; /* Arial font */
+}
+
+
+
+th {
+   background-color: white;
+   color: #de3163; /* White text for contrast */
+}
+
+input[type="text"].process-parameter {
+   border: 1px solid red;
+}
+
+:root {
+   --arrow-bg: rgba(255, 255, 255, 0.3);
+   --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
+   --option-bg: white;
+   --select-bg: rgba(255, 255, 255, 0.2);
+}
+
+select {
+   background-color: purple;
+   border-radius: 8px;
+   color: white;
+   padding: 10px;
+   width: 200px;
+   border: none;
+   font-size: 15px;
+   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+   -webkit-appearance: button;
+   appearance: button;
+   outline: none;
+   margin-bottom: 12px;
+}
+
+select::-ms-expand {
+   display: none;
+}
+
+select:focus {
+   outline: none;
+}
+
+.container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin: 20px;
+}
+.form-group {
+   margin-bottom: 10px;
+}
+.mandatory::after {
+   content: "*";
+   color: #ff0000; /* Neon red */
+}
+.content {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+}
+.form-container{
+	width: 60%;
+}
+
+.form-container2{
+	width: 100%;
+}
+
+.graph-container {
+   width: 40%;
+}
+.table-container {
+   margin-top: 20px;
+   width: 100%;
+}
+
+input[type="text"].disabled {
+   border: 1px solid red;
+   color: #f8c8dc;
+}
+
+input[type="text"] {
+   background-color: #811331; /* Dark input background */
+   color: white; /* White text */
+   border: 1px solid white;
+}
+
+        td,
+th {
+   width: 150px;
+}
+
+label {
+   color: white;
+}
+
+.measure {
+   color: white;
+}
+.button-container {
+   display: flex;
+   gap: 10px;
+   margin-bottom: 20px;
+}
+.button {
+   background-color: white;
+   color: purple;
+   border: 2px solid purple;
+   padding: 10px 20px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+}
+.button:hover {
+   background-color: purple;
+   color: white;
+}
+.button.selected {
+   background-color: purple;
+   color: white;
+}
+
+.analyse {
+   background-color: #e30b5c; /* Dark background */
+   color: white;
+   border: 2px solid #00ffff; /* Neon cyan border */
+   padding: 10px 20px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   border-radius: 14px;
+}
+.analyse:hover {
+   background-color: magenta;
+   color: white; /* Dark text */
+}
+.analyse.selected {
+   background-color: #00ffff; /* Neon cyan */
+   color: #0d0d0d; /* Dark text */
+}
+
+.seek {
+   background-color: #ae2029 ; /* dark background */
+   color: white;
+   border: 1.5px solid white; /* white border */
+   padding: 2px 5px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   border-radius: 3px;
+}
+.seek:hover {
+   background-color: black;
+   color: white; /* Dark text */
+}
+.seek.selected {
+   background-color: #00ffff; /* Neon cyan */
+   color: #0d0d0d; /* Dark text */
+}
+nav {
+   margin: 0 auto 0;
+
+   position: relative;
+   width: 480px;
+   height: 50px;
+   background-color: #34495e;
+   border-radius: 4px;
+   font-size: 0;
+}
+nav a {
+   line-height: 50px;
+   height: 100%;
+   font-size: 15px;
+   display: inline-block;
+   position: relative;
+   z-index: 1;
+   text-decoration: none;
+   text-transform: uppercase;
+   text-align: center;
+   color: white;
+   cursor: pointer;
+}
+
+nav .animation {
+   position: absolute;
+   height: 100%;
+   top: 0;
+   z-index: 0;
+   transition: all 0.5s ease 0s;
+   border-radius: 4px;
+}
+a:nth-child(1) {
+   width: 120px;
+}
+a:nth-child(2) {
+   width: 120px;
+}
+a:nth-child(3) {
+   width: 120px;
+}
+a:nth-child(4) {
+   width: 120px;
+}
+
+.checkbox-wrapper-3 input[type="checkbox"] {
+   visibility: hidden;
+   display: none;
+}
+
+.checkbox-wrapper-3 .toggle {
+   position: relative;
+   display: block;
+   width: 40px;
+   height: 20px;
+   cursor: pointer;
+   -webkit-tap-highlight-color: transparent;
+   transform: translate3d(0, 0, 0);
+}
+.checkbox-wrapper-3 .toggle:before {
+   content: "";
+   position: relative;
+   top: 3px;
+   left: 3px;
+   width: 34px;
+   height: 14px;
+   display: block;
+   background: #9a9999;
+   border-radius: 8px;
+   transition: background 0.2s ease;
+}
+.checkbox-wrapper-3 .toggle span {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 20px;
+   height: 20px;
+   display: block;
+   background: white;
+   border-radius: 10px;
+   box-shadow: 0 3px 8px rgba(154, 153, 153, 0.5);
+   transition: all 0.2s ease;
+}
+.checkbox-wrapper-3 .toggle span:before {
+   content: "";
+   position: absolute;
+   display: block;
+   margin: -18px;
+   width: 56px;
+   height: 56px;
+   background: rgba(79, 46, 220, 0.5);
+   border-radius: 50%;
+   transform: scale(0);
+   opacity: 1;
+   pointer-events: none;
+}
+
+.checkbox-wrapper-3 #cbx-3:checked + .toggle:before {
+   background: #947ada;
+}
+.checkbox-wrapper-3 #cbx-3:checked + .toggle span {
+   background: #4f2edc;
+   transform: translateX(20px);
+   transition: all 0.2s cubic-bezier(0.8, 0.4, 0.3, 1.25), background 0.15s ease;
+   box-shadow: 0 3px 8px rgba(79, 46, 220, 0.2);
+}
+.checkbox-wrapper-3 #cbx-3:checked + .toggle span:before {
+   transform: scale(1);
+   opacity: 0;
+   transition: all 0.4s ease;
+}

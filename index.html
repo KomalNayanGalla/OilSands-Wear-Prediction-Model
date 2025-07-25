@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<!--
+Author : Komal Nayan Galla
+Programming: HTML, CSS, Javascript, jQuery
+Project: Wear Prediction Model
+Lead: Matthew Barton
+Manager: Christopher Murphy
+
+A Web Based Application that predicts the Best to Worst Case Lifetimes of a Part (IMP/VOL/FPLI/TB)
+Linear Regression is used to calculate the Impacts and Hours. While VaneLengths are like a uniform distribution of 25 values.
+
+Takes Metric Values by default. Can switch to Imperial.
+The dimensions vary depending on the Part IPN selected.
+The Process Parameters vary depending on the Combination of Application and Mine Site.
+
+Wear Coefficient is a numeric factor that takes Impact Force, Particle Size & Geometry, Particle Material, Corossion, 
+Erosion,etc. into consideration
+
+The default values for dimensions and Duty Conditions a.k.a. Process Parameters are in JSON format in script section.
+Couldn't access them or scripts when stored in separate file due to Organizational Policies. 
+
+Calculated Fields like suction velocity , Average Tonnage and Solids Weight Percentage are displayed when 'Analyse' button is clicked
+and the necessary fields are validated.
+
+Default Wear Coefficients are provided depending on the Combination of Application and Mine Site.
+But can always 'seek coefficient' with pairs of Hours and Vanelengths in the order of their inspections.
+Average Wear Coefficient is counter-calculated and displayed in the textbox.
+
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impeller Wear Prediction</title>
+    <link rel="stylesheet" href="./css/wpm.css">
+</head>
+<body onload="loadMetric()">
+    <div class="container">
+        <nav>
+            <a href="#" id="impTab">IMPELLER</a>
+            <a href="./tb.html">THROATBUSH</a>
+            <a href="./vol.html">VOLUTE</a>
+            <a href="./fpli.html">FPLI</a>
+            <div class="animation"></div>
+        </nav>
+        
+        <h1 style="color:seashell;">Impeller Wear Prediction</h1>
+        <div class="button-container">
+            <button class="button" id="buttonImperial">Imperial</button>
+            <button class="button" id="buttonMetric">Metric</button>
+        </div>
+        <div class="content">
+            <div class="form-container">
+			<select name="impIPNDropdown" id="impIPNDropdown" placeholder="Impeller IPN">
+				<option value="" disabled selected hidden>-- Impeller IPN --</option>
+				<!--Dynamic JSON based IPNs-->
+			</select>
+			<select name="applicationDropdown" id="applicationDropdown" placeholder="Application" onchange="updateFormFields()">
+				<option value="" disabled selected hidden>-- Application --</option>
+				<option value="Hydrotransport">Hydrotransport</option>
+				<option value="Tailings">Tailings</option>
+			</select>
+			<select name="siteDropdown" id="siteDropdown" placeholder="Mine Site" onchange="updateFormFields()">
+				<option value="" disabled selected hidden>-- Mine Site --</option>
+				<option value="Horizon">Horizon</option>
+				<option value="JPM">JPM</option>
+				<option value="MRM">MRM</option>
+				<option value="K1">K1</option>
+				<option value="K2">K2</option>
+				<option value="Mildred Lake">Mildred Lake</option>
+				<option value="Aurora">Aurora</option>
+				<option value="Base Plant" value="Fort Hills">Base Plant</option>
+				<option value="Fort Hills">Fort Hills</option>
+			</select>
+                <table>
+					<tr>
+						<td style="color:yellow;font-size:12px;text-align:center;">Custom Duty Conditions</td>
+						<td class="checkbox-wrapper-3" style="text-align: center;"><input type="checkbox" id="cbx-3" /><label for="cbx-3" class="toggle"><span></span></label></td>
+					</tr>
+					<!--PROCESS-->
+                    <tr>
+                        <td><label for="avgRPM">Average RPM</label></td>
+                        <td><input type="text" id="avgRPM" class="process-parameter" placeholder="extracted or custom" disabled></td>
+                    </tr>
+                    <tr>
+                        <td><label for="avgHead">Average Head</label></td>
+                        <td><input type="text" id="avgHead" class="process-parameter" placeholder="extracted or custom" disabled></td>
+                        <td id="HeadUnits">m</td>
+                    </tr>
+                    <tr>
+                        <td><label for="SG">S.G</label></td>
+                        <td><input type="text" id="SG" class="process-parameter" placeholder="extracted or custom" disabled></td>
+                    </tr>
+                    <tr>
+                        <td><label for="avgFlow">Average Flow</label></td>
+                        <td><input type="text" id="avgFlow" class="process-parameter" placeholder="extracted or custom" disabled></td>
+						<td id="flowUnits">m<sup>3</sup>/hr</td>
+                    </tr>
+                    <tr>
+                        <td><label for="avgTonnage">Average Tonnage</label></td>
+                        <td><input type="text" class="disabled" id="avgTonnage" placeholder="to be calculated" disabled></td>
+						<td id="tonnageUnits">tph</td>
+                    </tr>
+                    <tr>
+                        <td><label for="solidsWeightPercent">Solids Weight %</label></td>
+                        <td><input type="text" class="disabled" id="solidsWeightPercent" placeholder="to be calculated" disabled></td>
+                    </tr>
+					<tr>
+                        <td><label for="suctionVelocity">Suction Velocity</label></td>
+                        <td><input type="text" class="disabled" id="suctionVelocity" placeholder="to be calculated" disabled></td><td id="suctionVelocityUnits">m/s</td>
+                    </tr>
+					<tr>
+					<td><br></td>
+					</tr>
+					<!--USER INPUTS-->
+					<tr>
+                        <td><label for="startHours" class="mandatory">Start Hours</label></td>
+                        <td><input type="text" id="startHours" placeholder="Input Start Hours" required></td><td>hrs</td>
+                    </tr>
+                    <tr>
+                        <td><label for="startVaneLength" class="mandatory">Start Vane Length</label></td>
+                        <td><input type="text" id="startVaneLength" placeholder="Input Start VL" required></td>
+						<td class="measure"></td>
+                    </tr>
+					<tr>
+					<td><br></td>
+					</tr>
+					<!--DIMENSIONS-->
+                    <tr>
+                        <td><label for="nominalVaneLength">Nominal Vane Length</label></td>
+                        <td><input type="text" class="disabled" id="nominalVaneLength" placeholder="to be extracted" disabled></td>
+						<td class="measure"></td>
+                    </tr>
+					<tr>
+                        <td><label for="eyeDiameter">Eye Diameter</label></td>
+                        <td><input type="text" class="disabled" id="eyeDiameter" placeholder="to be extracted" disabled></td><td class="measure"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="failureVaneLength" class="mandatory">Vane Length at Failure</label></td>
+                        <td><input type="text" class="disabled" id="failureVaneLength" placeholder="to be extracted" disabled></td>
+						<td class="measure"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="impellerID">Impeller ID</label></td>
+                        <td><input type="text" class="disabled" id="impellerID" placeholder="to be extracted" disabled></td>
+						<td class="measure"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="impellerOD">Impeller OD</label></td>
+                        <td><input type="text" class="disabled" id="impellerOD" placeholder="to be extracted" disabled></td>
+						<td class="measure"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="exponent">Exponent</label></td>
+                        <td><center><input type="range" id="exponent" name="exponent" min="2" max="3" step="0.01" oninput="updateValue(this.value)"><br>
+                            <span id="exponentValue">2.50</span></center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="wearCoefficient">Wear Coefficient</label></td>
+                        <td><input type="text" class="disabled" id="wearCoefficient" placeholder="extractable or calculated" disabled></td>
+						<td><center><button class="seek" onclick="goalseekDisplay()">Seek Coefficient</button></td>
+                    </tr>
+                    <tr>
+                        <td><label for="totalLifeSpan">Total Life Span</label></td>
+                        <td><input type="text" class="disabled" id="totalLifeSpan" placeholder="to be calculated" disabled><br>
+						<td id="lifeSpanUnits">hrs</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><br><center><button class="analyse" onclick="analyse()">Analyse</button></center></td>
+						
+                </table>
+                <p id="x"></p>
+            </div>
+
+            <div class="graph-container">
+                <canvas id="lineGraph"></canvas>
+            </div>
+        </div>
+		<div class="table-container">
+			<p id="goalseekTitle" style="font-weight:bold; color:white; font-size: 15px;"></p>
+			<table>
+				<tbody id="goalseekTable">
+				</tbody>
+			</table>
+		</div>
+        <div class="table-container">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Impact</th>
+                        <th>Vane Length</th>
+                        <th>Hours</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                      <!-- Adding rows dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+    const buttonImperial = document.getElementById('buttonImperial');
+    const buttonMetric = document.getElementById('buttonMetric');
+	const measures = document.getElementsByClassName("measure");
+	
+	var vaneLengths;
+	var Impacts;
+	var Hours;
+	var bestCaseExponent = 2;
+	var worstCaseExponent = 3;
+	var noOfInputs;
+		
+	let lineGraph;
+	
+	//Impeller Dimensions in mm - assuming ID = Eye 
+	const impellerData = {
+        "UHTP60145*": {
+            "Eye Diameter": 720,
+            "Nominal Vane Length": 1140,
+            "Impeller ID": 720,
+            "Impeller OD": 1575
+        },
+		"UHTP60145E2*": { // A701343
+            "Eye Diameter": 720,
+            "Nominal Vane Length": 1310,
+            "Impeller ID": 720,
+            "Impeller OD": 1575
+        },
+		"UHTP60145RE1*": { // A391321
+            "Eye Diameter": 720,
+            "Nominal Vane Length": 1380,
+            "Impeller ID": 720,
+            "Impeller OD": 1575
+        },
+		"UHTP60145E4*": { // A781101
+            "Eye Diameter": 720,
+            "Nominal Vane Length": 1300,
+            "Impeller ID": 720,
+            "Impeller OD": 1575
+        },
+		"UHTP60145R4*": { // A781100
+            "Eye Diameter": 625,
+            "Nominal Vane Length": 1300,
+            "Impeller ID": 625,
+            "Impeller OD": 1575
+        },
+		"UHTP60145HY*": { // A782388
+            "Eye Diameter": 720,
+            "Nominal Vane Length": 1184,
+            "Impeller ID": 720,
+            "Impeller OD": 1575
+        },
+		"UHTP60136E4*": { // A781103
+            "Eye Diameter": 720,
+            "Nominal Vane Length": 1501,
+            "Impeller ID": 720,
+            "Impeller OD": 1575
+        },
+		"UHTP60136R4*": { // A781102
+            "Eye Diameter": 625,
+            "Nominal Vane Length": 1501,
+            "Impeller ID": 625,
+            "Impeller OD": 1575
+        },
+        "UHTP65145RE*": { // A780089
+            "Eye Diameter": 710,
+            "Nominal Vane Length": 1950,
+            "Impeller ID": 710,
+            "Impeller OD": 1880
+        },
+        "UHTP65145E94R*": { // A781629
+            "Eye Diameter": 710,
+            "Nominal Vane Length": 1790,
+            "Impeller ID": 710,
+            "Impeller OD": 1770
+        },
+        "UHTP65145R3E94*": { // A782445
+            "Eye Diameter": 710,
+            "Nominal Vane Length": 1785,
+            "Impeller ID": 710,
+            "Impeller OD": 1880
+        },
+        "UHTP65145REE92*": { // A782532
+            "Eye Diameter": 710,
+            "Nominal Vane Length": 1795,
+            "Impeller ID": 710,
+            "Impeller OD": 1880
+        },
+		"HTPU55145*": { // A781711
+            "Eye Diameter": 625,
+            "Nominal Vane Length": 1109,
+            "Impeller ID": 625,
+            "Impeller OD": 1525
+        },
+        "UHTP50145*": { // A392515
+            "Eye Diameter": 610,
+            "Nominal Vane Length": 1020,
+            "Impeller ID": 610,
+            "Impeller OD": 1425
+        },
+        "UHTP50145BF1WC*": { // A782144
+            "Eye Diameter": 610,
+            "Nominal Vane Length": 1030,
+            "Impeller ID": 610,
+            "Impeller OD": 1425
+        },
+        "UHTP50145-0001*": { // A784461
+            "Eye Diameter": 610,
+            "Nominal Vane Length": 995,
+            "Impeller ID": 610,
+            "Impeller OD": 1354
+        }
+    };
+
+
+/*
+AVERAGE DUTY Conditions - Metric
++------------+--------+
+|  Measure   |  Unit  |
++------------+--------+
+|  avgRPM    |  rpm   |
+|  avgHead   |   m    |
+|    SG      |  none  |
+|  avgFlow   |  m3/hr |
+| wearCoeff. |  none  |
++------------+--------+
+*/
+
+const dutyConditions = {
+    "Horizon": {
+        "Hydrotransport": {
+            "wearCoefficient": 350,
+            "avgRPM": 350,
+            "avgFlow": 5863.5,
+            "SG": 1.52,
+            "avgHead": 25.5
+        },
+        "Tailings": {
+            "wearCoefficient": 137,
+            "avgRPM": 350,
+            "avgFlow": 4952,
+            "SG": 1.6,
+            "avgHead": 33
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "JPM": {
+        "Hydrotransport": {
+            "wearCoefficient": 250,
+            "avgRPM": 340,
+            "avgFlow": 6000,
+            "SG": 1.49,
+            "avgHead": 40
+        },
+        "Tailings": {
+            "wearCoefficient": 108,
+            "avgRPM": 350,
+            "avgFlow": 7000,
+            "SG": 1.49,
+            "avgHead": 48
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "MRM": {
+        "Hydrotransport": {
+            "wearCoefficient": 100,
+            "avgRPM": 300,
+            "avgFlow": 6500,
+            "SG": 1.79,
+            "avgHead": 45
+        },
+        "Tailings": {
+            "wearCoefficient": 174,
+            "avgRPM": 350,
+            "avgFlow": 7100,
+            "SG": 1.39,
+            "avgHead": 49
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "K1": {
+        "Hydrotransport": {
+            "wearCoefficient": 150,
+            "avgRPM": 325,
+            "avgFlow": 6700,
+            "SG": 1.58,
+            "avgHead": 50
+        },
+        "Tailings": {
+            "wearCoefficient": 205,
+            "avgRPM": 345,
+            "avgFlow": 6820,
+            "SG": 1.48,
+            "avgHead": 45
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "K2": {
+        "Hydrotransport": {
+            "wearCoefficient": 200,
+            "avgRPM": 360,
+            "avgFlow": 7200,
+            "SG": 1.45,
+            "avgHead": 56
+        },
+        "Tailings": {
+            "wearCoefficient": 351,
+            "avgRPM": 340,
+            "avgFlow": 6950,
+            "SG": 1.39,
+            "avgHead": 53
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "Mildred Lake": {
+        "Hydrotransport": {
+            "wearCoefficient": 400,
+            "avgRPM": 320,
+            "avgFlow": 6200,
+            "SG": 1.68,
+            "avgHead": 50
+        },
+        "Tailings": {
+            "wearCoefficient": 379,
+            "avgRPM": 330,
+            "avgFlow": 6800,
+            "SG": 1.42,
+            "avgHead": 48
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "Aurora": {
+        "Hydrotransport": {
+            "wearCoefficient": 50,
+            "avgRPM": 400,
+            "avgFlow": 8000,
+            "SG": 1.66,
+            "avgHead": 70
+        },
+        "Tailings": {
+            "wearCoefficient": 223,
+            "avgRPM": 340,
+            "avgFlow": 7000,
+            "SG": 1.48,
+            "avgHead": 46
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "Base Plant": {
+        "Hydrotransport": {
+            "wearCoefficient": 30,
+            "avgRPM": 320,
+            "avgFlow": 7000,
+            "SG": 1.55,
+            "avgHead": 46
+        },
+        "Tailings": {
+            "wearCoefficient": 242,
+            "avgRPM": 325,
+            "avgFlow": 6300,
+            "SG": 1.47,
+            "avgHead": 40
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+    "Fort Hills": {
+        "Hydrotransport": {
+            "wearCoefficient": 40,
+            "avgRPM": 350,
+            "avgFlow": 6900,
+            "SG": 1.54,
+            "avgHead": 44
+        },
+        "Tailings": {
+            "wearCoefficient": 326,
+            "avgRPM": 340,
+            "avgFlow": 6800,
+            "SG": 1.48,
+            "avgHead": 43
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    },
+	"": {
+        "Hydrotransport": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        },
+        "Tailings": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        },
+        "": {
+            "wearCoefficient": "",
+            "avgRPM": "",
+            "avgFlow": "",
+            "SG": "",
+            "avgHead": ""
+        }
+    }
+}
+
+
+	//Loading Metric by default 
+	function loadMetric()
+	{
+		buttonMetric.classList.add('selected');
+		for (var i = 0; i < measures.length; i++) {
+		           measures[i].innerHTML = 'mm';
+		}
+		
+		// Populate Impeller IPN dropdown
+        
+		const dropdown = document.getElementById('impIPNDropdown');
+        for (const key in impellerData) {
+            if (impellerData.hasOwnProperty(key)) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.text = key;
+                dropdown.appendChild(option);
+            }
+        }
+
+		document.querySelector('nav a').click();
+	}
+		
+	//Mine Site - Applications - Duty Conditions Reactions
+	function updateFormFields() 
+	{
+		const selectedMineSite = document.getElementById("siteDropdown").value;
+		const selectedApplication = document.getElementById("applicationDropdown").value;
+
+		const data = dutyConditions[selectedMineSite]?.[selectedApplication];
+		
+		//Metric Duty load
+		if (buttonMetric.classList.contains('selected'))
+		{
+		  if (data) 
+		  {
+			document.getElementById('wearCoefficient').value = data.wearCoefficient;
+			document.getElementById('avgRPM').value = data.avgRPM;
+			document.getElementById('avgFlow').value = data.avgFlow;
+			document.getElementById('SG').value = data.SG;
+			document.getElementById('avgHead').value = data.avgHead;
+		  } 
+		  else 
+		  {
+			window.alert("No data found for selected combination.");
+		  }
+		}
+		//Imperial Duty Load
+		else
+		{
+			if (data) 
+		  {
+			document.getElementById('wearCoefficient').value = data.wearCoefficient;
+			document.getElementById('avgRPM').value = data.avgRPM;
+			document.getElementById('avgFlow').value = (data.avgFlow*4.4029).toFixed(2);
+			document.getElementById('SG').value = data.SG;
+			document.getElementById('avgHead').value = (data.avgHead*3.281).toFixed(2);
+		  } 
+		  else 
+		  {
+			window.alert("No data found for selected combination.");
+		  }
+		}
+	}
+		
+		 
+	//Impeller Dropdown - Impeller Dimensions
+	document.getElementById('impIPNDropdown').addEventListener('change', function() {
+	        const selectedIPN = this.value;
+	        const impellerDetails = impellerData[selectedIPN];
+	        //alert('You selected: ' + impellerDetails["Eye Diameter"]);
+			
+			if (buttonImperial.classList.contains('selected')){
+			document.getElementById("eyeDiameter").value = (impellerDetails["Eye Diameter"]*0.0394).toFixed(2);
+			document.getElementById("nominalVaneLength").value = (impellerDetails["Nominal Vane Length"]*0.0394).toFixed(2);
+			document.getElementById("failureVaneLength").value = (impellerDetails["Nominal Vane Length"]*0.4*0.0394).toFixed(2);
+			document.getElementById("impellerID").value = (impellerDetails["Impeller ID"]*0.0394).toFixed(2);
+			document.getElementById("impellerOD").value = (impellerDetails["Impeller OD"]*0.0394).toFixed(2);
+			}
+			else
+			{
+			document.getElementById("eyeDiameter").value = (impellerDetails["Eye Diameter"]).toFixed(2);
+			document.getElementById("nominalVaneLength").value = (impellerDetails["Nominal Vane Length"]).toFixed(2);
+			document.getElementById("failureVaneLength").value = (impellerDetails["Nominal Vane Length"]*0.4).toFixed(2);
+			document.getElementById("impellerID").value = (impellerDetails["Impeller ID"]).toFixed(2);
+			document.getElementById("impellerOD").value = (impellerDetails["Impeller OD"]).toFixed(2);
+			}
+	    });
+
+		
+		//Imperial Button Click
+        buttonImperial.addEventListener('click', () => {
+            buttonImperial.classList.add('selected');
+            buttonMetric.classList.remove('selected');
+            // Add functionality for Inches
+			
+			for (var i = 0; i < measures.length; i++) {
+                measures[i].innerHTML = 'in';
+            }
+			document.getElementById("suctionVelocityUnits").innerHTML="ft/s";
+			document.getElementById("HeadUnits").innerHTML="ft";
+			//document.getElementById("sgUnits").innerHTML="lb/ft<sup>3</sup>";
+			document.getElementById("flowUnits").innerHTML="gpm";
+			
+			if(document.getElementById("eyeDiameter").value)
+			{
+				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value/25.4).toFixed(2);
+				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value/25.4).toFixed(2);
+				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value/25.4).toFixed(2);
+				document.getElementById("impellerID").value= (document.getElementById("impellerID").value/25.4).toFixed(2);
+				document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value/25.4).toFixed(2);
+			}
+
+        });
+
+		//Metric Button Click 
+        buttonMetric.addEventListener('click', () => {
+            buttonMetric.classList.add('selected');
+            buttonImperial.classList.remove('selected');
+            for (var i = 0; i < measures.length; i++) {
+                measures[i].innerHTML = 'mm';
+            }
+			document.getElementById("suctionVelocityUnits").innerHTML="m/s";
+			document.getElementById("HeadUnits").innerHTML="m";
+			//document.getElementById("sgUnits").innerHTML="kg/m<sup>3</sup>";
+			document.getElementById("flowUnits").innerHTML="m<sup>3</sup>/hr";
+			
+			if(document.getElementById("eyeDiameter").value)
+			{
+				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value*25.4).toFixed(2);
+				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value*25.4).toFixed(2);
+				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value*25.4).toFixed(2);
+				document.getElementById("impellerID").value= (document.getElementById("impellerID").value*25.4).toFixed(2);
+				document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value*25.4).toFixed(2);
+			}
+			
+        });
+		
+		
+		//Toggle Customize Duty Conditions
+		document.getElementById('cbx-3').addEventListener('change', function() {
+            if (this.checked) {
+				//enable fields inputs
+                document.getElementById("avgRPM").disabled = false;
+				document.getElementById("avgFlow").disabled = false;
+				document.getElementById("SG").disabled = false;
+				document.getElementById("avgHead").disabled = false;
+				
+				//placeholders
+				document.getElementById("avgRPM").placeholder = 'Input Average RPM';
+				document.getElementById("avgFlow").placeholder = 'Input Average Flow';
+				document.getElementById("SG").placeholder = 'Input Specific Gravity';
+				document.getElementById("avgHead").placeholder = 'Input Average Head';
+				
+				//border styles
+				document.getElementById("avgRPM").style.border = '1px solid yellow';
+				document.getElementById("avgFlow").style.border = '1px solid yellow';
+				document.getElementById("SG").style.border = '1px solid yellow';
+				document.getElementById("avgHead").style.border = '1px solid yellow';
+				
+				//Resetting and Disabling Application and Mine Site Dropdowns
+				document.getElementById('siteDropdown').selectedIndex = 0;
+				document.getElementById('siteDropdown').disabled = true;
+				document.getElementById('applicationDropdown').selectedIndex = 0;
+				document.getElementById('applicationDropdown').disabled = true;
+            } else {
+                //disable fields inputs
+                document.getElementById("avgRPM").disabled = true;
+				document.getElementById("avgFlow").disabled = true;
+				document.getElementById("SG").disabled = true;
+				document.getElementById("avgHead").disabled = true;
+				
+				//placeholders
+				document.getElementById("avgRPM").placeholder = 'extracted or custom';
+				document.getElementById("avgFlow").placeholder = 'extracted or custom';
+				document.getElementById("SG").placeholder = 'extracted or custom';
+				document.getElementById("avgHead").placeholder = 'extracted or custom';
+				
+				//border styles
+				document.getElementById("avgRPM").style.border = '1px solid red';
+				document.getElementById("avgFlow").style.border = '1px solid red';
+				document.getElementById("SG").style.border = '1px solid red';
+				document.getElementById("avgHead").style.border = '1px solid red';				
+				
+				//enabling mine site and Application Dropdowns
+				document.getElementById('applicationDropdown').disabled = false;
+				document.getElementById('siteDropdown').disabled = false;
+            }
+        });
+
+		
+		//Update Exponent 
+        function updateValue(value) {
+			//exponent = parseFloat(value).toFixed(2);
+            document.getElementById('exponentValue').textContent = parseFloat(value).toFixed(2);
+        }
+
+		//Float/Numeric Check
+		function isFloat(value) {
+		    return !isNaN(value) && parseFloat(value) == value;
+		}
+		
+
+	//Validate Fields for Analyse Function
+	function validateAnalyse()
+	{	
+		var invalidCounter = 0;
+		var invalidFields = "";
+		if(document.getElementById("startHours").value.trim() == "" || !isFloat(document.getElementById("startHours").value.trim()))
+			{invalidFields += "Start Hours"+"\n"; invalidCounter++;}
+		if(document.getElementById("avgRPM").value.trim() == "" || !isFloat(document.getElementById("avgRPM").value.trim()))
+			{invalidFields += "Average RPM"+"\n"; invalidCounter++;}
+		if(document.getElementById("avgHead").value.trim() == "" || !isFloat(document.getElementById("avgHead").value.trim()))
+			{invalidFields += "Average Head"+"\n"; invalidCounter++;}
+		if(document.getElementById("SG").value.trim() == "" || !isFloat(document.getElementById("SG").value.trim()))
+			{invalidFields += "S.G."+"\n"; invalidCounter++;}
+		if(document.getElementById("avgFlow").value.trim() == "" || !isFloat(document.getElementById("avgFlow").value.trim()))
+			{invalidFields += "Average Flow"+"\n"; invalidCounter++;}
+		if(document.getElementById("startVaneLength").value.trim() == "" || !isFloat(document.getElementById("startVaneLength").value.trim()))
+			{invalidFields += "Start Vane Length"+"\n"; invalidCounter++;}
+		if(document.getElementById("failureVaneLength").value.trim() == "" || !isFloat(document.getElementById("failureVaneLength").value.trim()))
+			{invalidFields += "Vane Length at Failure"+"\n"; invalidCounter++;}
+		if(document.getElementById("wearCoefficient").value.trim() == "" || !isFloat(document.getElementById("wearCoefficient").value.trim()))
+			{invalidFields += "Wear Coefficient"+"\n"; invalidCounter++;}
+		if(invalidCounter>0)
+			{
+			alert("The following fields are blank or invalid :"+"\n"+invalidFields);
+			return false;
+			}
+	}
+		
+		
+	//Goalseek Validate 
+	function validateGoalSeek()
+	{	
+		var invalidCounter = 0;
+		var goalSeekInvalidCounter = 0;
+		var invalidFields = "";
+		
+		const goalseekHoursFields = document.querySelectorAll('.goalseekHourInputs');
+		const goalseekVaneLengthFields = document.querySelectorAll('.goalseekVaneLengthInputs');
+		
+		if(document.getElementById("startHours").value.trim() == "" || !isFloat(document.getElementById("startHours").value.trim()))
+			{invalidFields += "Start Hours"+"\n"; invalidCounter++;}
+		if(document.getElementById("avgRPM").value.trim() == "" || !isFloat(document.getElementById("avgRPM").value.trim()))
+			{invalidFields += "Average RPM"+"\n"; invalidCounter++;}
+		if(document.getElementById("avgHead").value.trim() == "" || !isFloat(document.getElementById("avgHead").value.trim()))
+			{invalidFields += "Average Head"+"\n"; invalidCounter++;}
+		if(document.getElementById("SG").value.trim() == "" || !isFloat(document.getElementById("SG").value.trim()))
+			{invalidFields += "S.G."+"\n"; invalidCounter++;}
+		if(document.getElementById("avgFlow").value.trim() == "" || !isFloat(document.getElementById("avgFlow").value.trim()))
+			{invalidFields += "Average Flow"+"\n"; invalidCounter++;}
+		if(document.getElementById("startVaneLength").value.trim() == "" || !isFloat(document.getElementById("startVaneLength").value.trim()))
+			{invalidFields += "Start Vane Length"+"\n"; invalidCounter++;}
+		if(document.getElementById("failureVaneLength").value.trim() == "" || !isFloat(document.getElementById("failureVaneLength").value.trim()))
+			{invalidFields += "Vane Length at Failure"+"\n"; invalidCounter++;}
+			
+		goalseekHoursFields.forEach(hour => {
+			if(hour.value.trim()=="" || !isFloat(hour.value))
+			{
+				goalSeekInvalidCounter++;
+			}
+		});
+		
+		goalseekVaneLengthFields.forEach(vl => {
+			if(vl.value.trim()=="" || !isFloat(vl.value))
+			{
+				goalSeekInvalidCounter++;
+			}
+		});
+		
+		//All fields valid
+		if(invalidCounter==0 && goalSeekInvalidCounter==0)
+		{
+			return true;
+		}
+		
+		if(goalSeekInvalidCounter>0)
+		{
+			invalidFields += "One or more VL or Hours for Coeffient Calculation\n";
+		}
+		
+		if(invalidCounter>0 || goalSeekInvalidCounter>0)
+		{
+			alert("The following fields are blank or invalid :"+"\n"+invalidFields);
+			return false;
+		}
+
+		
+	}
+	
+	
+	//Display Goal Seek Input Fields
+	function goalseekDisplay()
+	{
+		noOfInputs = window.prompt('Enter the number of Hour-Vane Length sets for Coefficient Calculation');
+		if(!isFloat(noOfInputs) || noOfInputs == 0)
+		{
+			window.alert('Not a valid number, Press Seek Coefficient again');
+		}
+		else
+		{
+		var goalseekInputs = "";
+		for (var i = 0; i < noOfInputs; i++){
+			var tr = "<tr>";
+			tr += "<td>Hours-"+(i+1)+": <input type='text' class='goalseekHourInputs' placeholder='Enter Hours-"+(i+1)+"' required> </td>";
+			tr += "<td>VL-"+(i+1)+": <input type='text' class='goalseekVaneLengthInputs' placeholder='Enter Vane Length-"+(i+1)+"' required> </td>";
+			tr += "</tr>";
+			goalseekInputs += tr;
+			}
+			goalseekInputs += "<tr><td colspan='2'><center><br><button class='analyse' onclick='calculateCoefficient()'>Calculate Coefficient</button></center></td></tr>"; 
+			document.getElementById('goalseekTable').innerHTML = goalseekInputs;
+			document.getElementById('goalseekTitle').innerHTML = "Goalseek Inputs";
+		}
+	}
+	
+	//Average Wear Coefficient
+	function average(wcArray)
+	{
+		var avg = 0;
+		for(var i=0;i<wcArray.length;i++)
+		{
+			avg += wcArray[i];
+		}
+		return avg/wcArray.length;
+	}
+	
+	
+	//invoke validation and goalSeek 
+	function calculateCoefficient()
+	{
+		
+		var suctionVelocity;
+		var solidsWeightPercent;
+		var averageTonnage;
+		
+		//Reference Variables
+		var refTonnage = 5000;
+		var refImpact = 15.4; 
+		
+		const goalSeekImpacts=[];
+		const goalSeekWCs=[];
+		const goalSeekHours = [];
+		const goalSeekVLs = [];
+		
+		if(validateGoalSeek())
+		{
+			var startHours = parseFloat(document.getElementById("startHours").value);
+			var averageFlow = parseFloat(document.getElementById("avgFlow").value);
+			var eyeDiameter = parseFloat(document.getElementById("eyeDiameter").value);
+			var specificGravity = parseFloat(document.getElementById("SG").value);
+			var averageRPM = parseFloat(document.getElementById("avgRPM").value);
+			var startVL = parseFloat(document.getElementById("startVaneLength").value);
+			var failVL = parseFloat(document.getElementById("failureVaneLength").value);
+			var nominalVaneLength = parseFloat(document.getElementById("nominalVaneLength").value);
+			var impellerID = parseFloat(document.getElementById("impellerID").value);
+			var impellerOD = parseFloat(document.getElementById("impellerOD").value);
+			var exponent = parseFloat(document.getElementById('exponentValue').textContent);
+			const goalseekHoursFields = document.querySelectorAll('.goalseekHourInputs');
+			const goalseekVaneLengthFields = document.querySelectorAll('.goalseekVaneLengthInputs');
+			
+			//To Arrays
+			goalseekHoursFields.forEach(hour => {
+				if(!hour.value.trim()=="" && isFloat(hour.value))
+				{
+					goalSeekHours.push(hour.value);
+				}
+			});
+			
+			goalseekVaneLengthFields.forEach(vl => {
+				if(!vl.value.trim()=="" && isFloat(vl.value))
+				{
+					goalSeekVLs.push(vl.value);
+				}
+			});
+			
+			//adding start hours and nominal vanelength to the beginning of the array
+			goalSeekHours.unshift(startHours);
+			goalSeekVLs.unshift(nominalVaneLength);
+			
+			//window.alert('Hours : '+goalSeekHours+'\nVLs : '+goalSeekVLs);
+				
+			if (buttonImperial.classList.contains('selected')) { // If Imperial
+				suctionVelocity = (averageFlow / (4.4029 * 3600))*3.281/(Math.PI*Math.pow(( eyeDiameter*0.0254/2),2)); //ft/s - FLOW in GPM, Eye in inches
+				solidsWeightPercent = -(((1/specificGravity)-1)/((2.65-1)/2.65)); 
+				averageTonnage = ((specificGravity-0.99)/(2.65-0.99))*(averageFlow/4.4029)*2.65; //if flow in gpm		
+				for(var i=0;i<goalSeekVLs.length;i++)
+				{	
+					goalSeekImpacts.push((Math.sqrt(Math.pow(suctionVelocity/3.281, 2) + Math.pow(Math.PI * (averageRPM / 60)*0.0254* (impellerID + ((nominalVaneLength - goalSeekVLs[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6)); //suctionVelocity in ft/s and dim in inches
+				}
+				for(var i=1;i<goalSeekVLs.length;i++)
+				{
+					goalSeekWCs.push((goalSeekHours[i] - goalSeekHours[i-1])/( (goalSeekVLs[i-1] - goalSeekVLs[i]) * (5000 / averageTonnage) * Math.pow(15.4 / goalSeekImpacts[i-1], exponent)));
+				}				
+			}
+			else // IF METRIC
+			{
+				suctionVelocity = (averageFlow/3600)/(Math.PI*Math.pow(( eyeDiameter*0.0254*0.0394/2),2)); //m/s
+				solidsWeightPercent = -(((1/specificGravity)-1)/((2.65-1)/2.65)); 
+				averageTonnage = ((specificGravity-0.99)/(2.65-0.99))*averageFlow*2.65; //tph, flow in m3/hr
+				for(var i=0;i<goalSeekVLs.length;i++)
+				{	
+					goalSeekImpacts.push((Math.sqrt(Math.pow(suctionVelocity, 2) + Math.pow(Math.PI * (averageRPM / 60) *0.0254*0.0394 *(impellerID + ((nominalVaneLength - goalSeekVLs[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6)); //suctionVelocity in m/s and dim in mm
+				}
+				//window.alert('GoalSeek Impacts : '+goalSeekImpacts);
+				for(var i=1;i<goalSeekVLs.length;i++)
+				{
+					goalSeekWCs.push((goalSeekHours[i] - goalSeekHours[i-1])/(0.0394 * (goalSeekVLs[i-1] - goalSeekVLs[i]) * (5000 / averageTonnage) * Math.pow(15.4 / goalSeekImpacts[i-1], exponent)));
+				}
+				//window.alert('GoalSeek WCs : '+goalSeekWCs);
+			}
+			
+			//WC Average Calculation
+			var averageWearCoefficient = average(goalSeekWCs);
+			
+			window.alert('Best Wear Coefficient : '+Math.round(averageWearCoefficient)+'\nNow in Wear Coefficient');
+			document.getElementById('wearCoefficient').value = Math.round(averageWearCoefficient);
+		}
+	}
+
+	
+	//Calculate VLs,Impacts, Hours and display graph
+	function analyse()
+		{
+			
+			validateAnalyse();
+			vaneLengths = [];
+			Hours = [];
+			Impacts = [];
+			var bestCaseHours = [];
+			var worstCaseHours = [];
+			Hours = [];
+			Impacts = [];
+			
+			//Reference values
+			var refTonnage = 5000;
+			var refImpact = 15.4;
+		
+			var startHours = parseFloat(document.getElementById("startHours").value);
+			var averageFlow = parseFloat(document.getElementById("avgFlow").value);
+			var eyeDiameter = parseFloat(document.getElementById("eyeDiameter").value);
+			var specificGravity = parseFloat(document.getElementById("SG").value);
+			var averageRPM = parseFloat(document.getElementById("avgRPM").value);
+			var startVL = parseFloat(document.getElementById("startVaneLength").value);
+			var failVL = parseFloat(document.getElementById("failureVaneLength").value);
+			var nominalVaneLength = parseFloat(document.getElementById("nominalVaneLength").value);
+			var impellerID = parseFloat(document.getElementById("impellerID").value);
+			var impellerOD = parseFloat(document.getElementById("impellerOD").value);
+			var exponent = parseFloat(document.getElementById('exponentValue').textContent);
+			var wearCoefficient = parseFloat(document.getElementById("wearCoefficient").value);
+			
+			if (buttonImperial.classList.contains('selected')) { // If Imperial
+			
+			var suctionVelocity = (averageFlow / (4.4029 * 3600))*3.281/(Math.PI*Math.pow(( eyeDiameter*0.0254/2),2)); //ft/s - FLOW in GPM, Eye in inches
+			var solidsWeightPercent = -(((1/specificGravity)-1)/((2.65-1)/2.65)); 
+			var averageTonnage = ((specificGravity-0.99)/(2.65-0.99))*(averageFlow/4.4029)*2.65; //if flow in gpm		
+			document.getElementById("suctionVelocity").value = suctionVelocity.toFixed(9);
+			document.getElementById("solidsWeightPercent").value = solidsWeightPercent.toFixed(9);
+			document.getElementById("avgTonnage").value = averageTonnage.toFixed(9);
+			
+			for (var vl = startVL; vl >= failVL; vl = vl-((startVL-failVL)/25)) {
+                vaneLengths.push(vl.toFixed(2));}
+			
+			for (var i=0; i<vaneLengths.length; i++)
+			{
+				Impacts.push((Math.sqrt(Math.pow(suctionVelocity/3.281, 2) + Math.pow(Math.PI * (averageRPM / 60)*0.0254* (impellerID + ((nominalVaneLength - vaneLengths[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6)); //suctionVelocity in ft/s and dim in inches
+			}
+			
+			//Changing Reference Impact from values
+			refImpact = parseFloat(((parseFloat(Impacts[0]) + parseFloat(Impacts[1]) + parseFloat(Impacts[2]) + parseFloat(Impacts[3]) + parseFloat(Impacts[4]) + parseFloat(Impacts[5])) / 6).toFixed(2));
+			
+			for (var i=0; i<vaneLengths.length; i++)
+			{
+				if(i==0)
+				{
+					Hours.push(startHours);
+					bestCaseHours.push(startHours);
+					worstCaseHours.push(startHours);
+					//document.getElementById("x").innerHTML += "Hrs[i-1]:"+Hours[0];
+				}
+				else
+				{
+				    //document.getElementById("x").innerHTML += "Hrs[]:"+Hours//[i-1]+ ",VL[i]" + vaneLengths[i] + ",VL[i-1]" + vaneLengths[i-1];
+					Hours.push(parseFloat((Hours[i-1]+(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],exponent)).toFixed(4)));
+					bestCaseHours.push(parseFloat((bestCaseHours[i-1]+(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],2)).toFixed(4)));
+					worstCaseHours.push(parseFloat((worstCaseHours[i-1]+(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],3)).toFixed(4)));
+					//document.getElementById("x").innerHTML = "Best : "+bestCaseHours+"<br> Worst :"+worstCaseHours;
+				}
+			}
+			document.getElementById("totalLifeSpan").value = Hours[20];
+			//document.getElementById("x").innerHTML = vaneLengths+"<br>"+Impacts;
+			var t = "";
+			for (var i = 0; i < vaneLengths.length; i++){
+				  var tr = "<tr>";
+				  tr += "<td style='text-align:center;'>"+Impacts[i]+"</td>";
+				  tr += "<td style='text-align:center;'>"+vaneLengths[i]+"</td>";
+				  tr += "<td style='text-align:center;'>"+Hours[i]+"</td>";
+				  tr += "</tr>";
+				  t += tr;
+			}
+			document.getElementById("tableBody").innerHTML = t;
+			
+			//GRAPH 
+			
+			const ctx = document.getElementById('lineGraph').getContext('2d');
+			if (lineGraph) {
+				lineGraph.data.datasets[0].data = Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+				lineGraph.data.datasets[1].data = bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+				lineGraph.data.datasets[2].data = worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+				lineGraph.update();
+			} else {
+				lineGraph = new Chart(ctx, {
+					type: 'line',
+					data: {
+						datasets: [
+							{
+								label: 'Hours',
+								data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+								borderColor: 'white',
+								borderWidth: 2,
+								lineTension: 0.4, // Adjust this value to control the curve
+								pointStyle: 'triangle'
+							},
+							{
+								label: 'Best Case Hours',
+								data: bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+								borderColor: 'lime',
+								borderWidth: 1,
+								lineTension: 0.4 // Adjust this value to control the curve
+							},
+							{
+								label: 'Worst Case Hours',
+								data: worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+								borderColor: '#f7f749',
+								borderWidth: 1,
+								lineTension: 0.4 // Adjust this value to control the curve
+							}
+						]
+					},
+					options: {
+						scales: {
+							x: {
+								type: 'linear',
+								title: {
+									display: true,
+									text: 'Hours',
+									color: '#F2D2BD',
+									font : {size : 20}
+								},
+								min: 0,
+								max: 8000,
+								ticks: {
+									stepSize: 500, // Ensure labels are spaced by 500
+									color: 'white' 
+								},
+								grid: {
+									display: true, // Enable grid lines
+									color: '#A9A9A9' // Set grid line color
+								}
+							},
+							y: {
+								title: {
+									display: true,
+									text: 'Vane Length',
+									color: 'white',
+									font : {size : 20}
+								},
+								min: 0,
+								max: 80,
+								ticks: {
+									stepSize: 10, // Ensure labels are spaced by 10
+									color: 'white' 
+								},
+								grid: {
+									display: true, // Enable grid lines
+									color: '#A9A9A9' // Set grid line color
+								}
+							}
+
+						},					
+						plugins: {
+                			legend: {
+                    				labels: {
+                        					color: 'white' // Change legend font color to white
+                    						}
+                					}
+            					}
+					}
+				});
+			}
+
+			}//end of Imperial logic
+			
+			//METRIC LOGIC
+			else{
+			var suctionVelocity = (averageFlow/3600)/(Math.PI*Math.pow(( eyeDiameter*0.0254*0.0394/2),2)); //m/s
+			var solidsWeightPercent = -(((1/specificGravity)-1)/((2.65-1)/2.65)); 
+			var averageTonnage = ((specificGravity-0.99)/(2.65-0.99))*averageFlow*2.65; //tph, flow in m3/hr	-- what is 2.65?
+			document.getElementById("suctionVelocity").value = suctionVelocity.toFixed(9);
+			document.getElementById("solidsWeightPercent").value = solidsWeightPercent.toFixed(9);
+			document.getElementById("avgTonnage").value = averageTonnage.toFixed(9);
+			
+			for (var vl = startVL; vl >= failVL; vl = vl-((startVL-failVL)/25)) {
+                vaneLengths.push(vl.toFixed(2));}
+			
+			for (var i=0; i<vaneLengths.length; i++)
+			{
+				Impacts.push((Math.sqrt(Math.pow(suctionVelocity, 2) + Math.pow(Math.PI * (averageRPM / 60) *0.0254*0.0394 *(impellerID + ((nominalVaneLength - vaneLengths[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6)); //suctionVelocity in m/s and dim in mm
+			}
+			
+			//Changing Reference Impact from values
+			refImpact = parseFloat(((parseFloat(Impacts[0]) + parseFloat(Impacts[1]) + parseFloat(Impacts[2]) + parseFloat(Impacts[3]) + parseFloat(Impacts[4]) + parseFloat(Impacts[5])) / 6).toFixed(2));
+
+			for (var i=0; i<vaneLengths.length; i++)
+			{
+				if(i==0)
+				{
+					Hours.push(startHours);
+					bestCaseHours.push(startHours);
+					worstCaseHours.push(startHours);
+					//document.getElementById("x").innerHTML += "Hrs[i-1]:"+Hours[0];
+				}
+				else
+				{
+				    //document.getElementById("x").innerHTML += "Hrs[]:"+Hours//[i-1]+ ",VL[i]" + vaneLengths[i] + ",VL[i-1]" + vaneLengths[i-1];
+					Hours.push(parseFloat((Hours[i-1]+0.0394*(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],exponent)).toFixed(4)));
+					bestCaseHours.push(parseFloat((bestCaseHours[i-1]+0.0394*(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],2)).toFixed(4)));
+					worstCaseHours.push(parseFloat((worstCaseHours[i-1]+0.0394*(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],3)).toFixed(4)));
+					//document.getElementById("x").innerHTML = "Best : "+bestCaseHours+"<br> Worst :"+worstCaseHours;
+				}
+			}
+			document.getElementById("totalLifeSpan").value = Hours[20]; //20 should be customizable
+			//document.getElementById("x").innerHTML = vaneLengths+"<br>"+Impacts;
+			var t = "";
+			for (var i = 0; i < vaneLengths.length; i++){
+				  var tr = "<tr>";
+				  tr += "<td style='text-align:center;'>"+Impacts[i]+"</td>";
+				  tr += "<td style='text-align:center;'>"+vaneLengths[i]+"</td>";
+				  tr += "<td style='text-align:center;'>"+Hours[i]+"</td>";
+				  tr += "</tr>";
+				  t += tr;
+			}
+			document.getElementById("tableBody").innerHTML = t;
+			
+			//GRAPH 
+			
+			const ctx = document.getElementById('lineGraph').getContext('2d');
+			if (lineGraph) {
+				lineGraph.data.datasets[0].data = Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+				lineGraph.data.datasets[1].data = bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+				lineGraph.data.datasets[2].data = worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+				lineGraph.update();
+			} else {
+				lineGraph = new Chart(ctx, {
+					type: 'line',
+					data: {
+						datasets: [
+							{
+								label: 'Hours',
+								data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+								borderColor: 'white',
+								borderWidth: 2,
+								lineTension: 0.4, // Adjust this value to control the curve
+								pointStyle: 'triangle'
+							},
+							{
+								label: 'Best Case Hours',
+								data: bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+								borderColor: 'lime',
+								borderWidth: 1,
+								lineTension: 0.4 // Adjust this value to control the curve
+							},
+							{
+								label: 'Worst Case Hours',
+								data: worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+								borderColor: '#f7f749',
+								borderWidth: 1,
+								lineTension: 0.4 // Adjust this value to control the curve
+							}
+						]
+					},
+					options: {
+						scales: {
+							x: {
+								type: 'linear',
+								title: {
+									display: true,
+									text: 'Hours',
+									color: '#F2D2BD',
+									font : {size : 20}
+								},
+								min: 0,
+								max: 8000,
+								ticks: {
+									stepSize: 500, // Ensure labels are spaced by 500
+									color: 'white' 
+								},
+								grid: {
+									display: true, // Enable grid lines
+									color: '#A9A9A9' // Set grid line color
+								}
+							},
+							y: {
+								title: {
+									display: true,
+									text: 'Vane Length',
+									color: 'white',
+									font : {size : 20}
+								},
+								min: 0,
+								max: 1700,
+								ticks: {
+									stepSize: 100, // Ensure labels are spaced by 100
+									color: 'white' 
+								},
+								grid: {
+									display: true, // Enable grid lines
+									color: '#A9A9A9' // Set grid line color
+								}
+							}
+
+						},					
+						plugins: {
+                			legend: {
+                    				labels: {
+                        					color: 'white' // Change legend font color to white
+                    						}
+                					}
+            					}
+					}
+				});
+			}
+			} // end of metric logic
+		}
+		
+		//NAVBAR Response
+		document.querySelectorAll('nav a').forEach(link => {
+			link.addEventListener('click', function() {
+				document.querySelectorAll('nav a').forEach(item => item.classList.remove('active'));
+				this.classList.add('active');
+				
+				const animation = document.querySelector('.animation');
+				if (this.textContent === 'IMPELLER') {
+					animation.style.width = '120px';
+		            animation.style.left = '0';
+		            animation.style.backgroundColor = '#1abc9c';
+				} else if (this.textContent === 'THROATBUSH') {
+		            animation.style.width = '120px';
+		            animation.style.left = '120px';
+		            animation.style.backgroundColor = '#e74c3c';
+				} else if (this.textContent === 'VOLUTE') {
+					animation.style.width = '120px';
+		            animation.style.left = '240px';
+		            animation.style.backgroundColor = '#3498db';
+				} else if (this.textContent === 'FPLI') {
+					animation.style.width = '120px';
+		            animation.style.left = '360px';
+		            animation.style.backgroundColor = '#9b59b6';
+				}
+			});
+		});
+    </script>	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
