@@ -33,16 +33,17 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Impeller Wear Prediction</title>
     <link rel="stylesheet" href="./css/wpm.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body onload="loadMetric()">
     <div class="container">
-        <nav>
-            <a href="#" id="impTab">IMPELLER</a>
-            <a href="./tb.html">THROATBUSH</a>
-            <a href="./vol.html">VOLUTE</a>
-            <a href="./fpli.html">FPLI</a>
-            <div class="animation"></div>
-        </nav>
+        <div class="hamburger" onclick="toggleMenu()"><b>MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
+		<div class="hamburger-menu" id="hamburgerMenu">
+		  <a href="./index.html">IMPELLER</a>
+		  <a href="./tb.html">THROATBUSH</a>
+		  <a href="./vol.html">VOLUTE</a>
+		  <a href="./fpli.html">FPLI</a>
+		</div>
         
         <h1 style="color:seashell;">Impeller Wear Prediction</h1>
         <div class="button-container">
@@ -581,7 +582,13 @@ const dutyConditions = {
             }
         }
 
-		document.querySelector('nav a').click();
+	}
+		
+		
+	//Toggle Hamburger menu
+	function toggleMenu() {
+		const menu = document.getElementById("hamburgerMenu");
+		menu.classList.toggle("show");
 	}
 		
 	//Mine Site - Applications - Duty Conditions Reactions
@@ -1296,32 +1303,6 @@ const dutyConditions = {
 			} // end of metric logic
 		}
 		
-		//NAVBAR Response
-		document.querySelectorAll('nav a').forEach(link => {
-			link.addEventListener('click', function() {
-				document.querySelectorAll('nav a').forEach(item => item.classList.remove('active'));
-				this.classList.add('active');
-				
-				const animation = document.querySelector('.animation');
-				if (this.textContent === 'IMPELLER') {
-					animation.style.width = '120px';
-		            animation.style.left = '0';
-		            animation.style.backgroundColor = '#1abc9c';
-				} else if (this.textContent === 'THROATBUSH') {
-		            animation.style.width = '120px';
-		            animation.style.left = '120px';
-		            animation.style.backgroundColor = '#e74c3c';
-				} else if (this.textContent === 'VOLUTE') {
-					animation.style.width = '120px';
-		            animation.style.left = '240px';
-		            animation.style.backgroundColor = '#3498db';
-				} else if (this.textContent === 'FPLI') {
-					animation.style.width = '120px';
-		            animation.style.left = '360px';
-		            animation.style.backgroundColor = '#9b59b6';
-				}
-			});
-		});
     </script>	
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
