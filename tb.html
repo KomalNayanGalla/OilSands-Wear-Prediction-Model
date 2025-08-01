@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Throatbush Wear Prediction</title>
     <link rel="stylesheet" href="css/wpm.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!--script src="https://code.jquery.com/jquery-3.6.0.min.js"></script-->
     <!--script src="./script/wpm.js"></script-->
 </head>
 <body onload="loadMetric()">
     <div class="container">
-        <nav>
-			<a href="index.html">IMPELLER</a>
-            <a href="tb.html">THROATBUSH</a>
-            <a href="vol.html">VOLUTE</a>
-            <a href="fpli.html">FPLI</a>
-            <div class="animation"></div>
-        </nav>
+        <div class="hamburger" onclick="toggleMenu()"><b>MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
+		<div class="hamburger-menu" id="hamburgerMenu">
+		  <a href="./index.html">IMPELLER</a>
+		  <a href="./tb.html">THROATBUSH</a>
+		  <a href="./vol.html">VOLUTE</a>
+		  <a href="./fpli.html">FPLI</a>
+		</div>
         
         <h1 style="color:seashell;">Throatbush Wear Prediction</h1> <!-- Sea Shell-->
         <div class="button-container">
@@ -588,6 +589,7 @@
 		           measures[i].innerHTML = 'mm';
 		}
 		
+	
 		// Populate Throatbush IPN dropdown
         
 		const dropdown1 = document.getElementById('tbIPNDropdown');
@@ -632,7 +634,13 @@
 
 	}
 	
-
+	//Toggle Hamburger menu
+	function toggleMenu() {
+		const menu = document.getElementById("hamburgerMenu");
+		menu.classList.toggle("show");
+	}	
+	
+	
 	//Impeller Dropdown - Impeller Dimensions
 	document.getElementById('impIPNDropdown').addEventListener('change', function() {
 	        const selectedIPN = this.value;
