@@ -305,6 +305,24 @@ a:nth-child(4) {
     padding: 10px;
   }
 
+
+   nav {
+    width: 100%;
+    height: auto;
+  }
+
+  nav a {
+    display: block;
+    width: 100%;
+    font-size: 14px;
+    line-height: 40px;
+  }
+
+  select {
+    width: 100%;
+    font-size: 14px;
+  }
+
   .form-container {
     width: 100%;
   }
@@ -338,7 +356,23 @@ a:nth-child(4) {
   nav {
     width: 100%;
     font-size: 12px;
+	height: auto;
   }
+  
+  
+  nav a {
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    line-height: 40px;
+  }
+
+	
+  select {
+    width: 100%;
+    font-size: 13px;
+  }
+
 
   table, thead, tbody, th, td, tr {
     display: block;
