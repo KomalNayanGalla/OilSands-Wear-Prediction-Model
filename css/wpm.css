@@ -5,14 +5,14 @@ Author: Komal Nayan Galla
 body {
    background-image: linear-gradient(to left, purple, red);
    color: white;
-   font-family: Arial, sans-serif; /* Arial font */
+   font-family: Arial, sans-serif; 
 }
 
 
 
 th {
    background-color: white;
-   color: #de3163; /* White text for contrast */
+   color: #de3163; 
 }
 
 input[type="text"].process-parameter {
@@ -89,8 +89,8 @@ input[type="text"].disabled {
 }
 
 input[type="text"] {
-   background-color: #811331; /* Dark input background */
-   color: white; /* White text */
+   background-color: #811331; 
+   color: white; 
    border: 1px solid white;
 }
 
@@ -129,9 +129,9 @@ label {
 }
 
 .analyse {
-   background-color: #e30b5c; /* Dark background */
+   background-color: #e30b5c; 
    color: white;
-   border: 2px solid #00ffff; /* Neon cyan border */
+   border: 2px solid #00ffff; 
    padding: 10px 20px;
    cursor: pointer;
    transition: all 0.3s ease;
@@ -139,17 +139,17 @@ label {
 }
 .analyse:hover {
    background-color: magenta;
-   color: white; /* Dark text */
+   color: white; 
 }
 .analyse.selected {
-   background-color: #00ffff; /* Neon cyan */
-   color: #0d0d0d; /* Dark text */
+   background-color: #00ffff; 
+   color: #0d0d0d; 
 }
 
 .seek {
-   background-color: #ae2029 ; /* dark background */
+   background-color: #ae2029 ; 
    color: white;
-   border: 1.5px solid white; /* white border */
+   border: 1.5px solid white; 
    padding: 2px 5px;
    cursor: pointer;
    transition: all 0.3s ease;
@@ -157,55 +157,11 @@ label {
 }
 .seek:hover {
    background-color: black;
-   color: white; /* Dark text */
+   color: white; 
 }
 .seek.selected {
-   background-color: #00ffff; /* Neon cyan */
-   color: #0d0d0d; /* Dark text */
-}
-nav {
-   margin: 0 auto 0;
-
-   position: relative;
-   width: 480px;
-   height: 50px;
-   background-color: #34495e;
-   border-radius: 4px;
-   font-size: 0;
-}
-nav a {
-   line-height: 50px;
-   height: 100%;
-   font-size: 15px;
-   display: inline-block;
-   position: relative;
-   z-index: 1;
-   text-decoration: none;
-   text-transform: uppercase;
-   text-align: center;
-   color: white;
-   cursor: pointer;
-}
-
-nav .animation {
-   position: absolute;
-   height: 100%;
-   top: 0;
-   z-index: 0;
-   transition: all 0.5s ease 0s;
-   border-radius: 4px;
-}
-a:nth-child(1) {
-   width: 120px;
-}
-a:nth-child(2) {
-   width: 120px;
-}
-a:nth-child(3) {
-   width: 120px;
-}
-a:nth-child(4) {
-   width: 120px;
+   background-color: #00ffff; 
+   color: #0d0d0d; 
 }
 
 .checkbox-wrapper-3 input[type="checkbox"] {
@@ -275,6 +231,37 @@ a:nth-child(4) {
    transition: all 0.4s ease;
 }
 
+.hamburger {
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.hamburger-menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background-color: #34495e;
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 999;
+}
+
+.hamburger-menu.show {
+  display: block;
+}
+
+.hamburger-menu a {
+  display: block;
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+}
 
 /*Media Queries for responsiveness*/
 
@@ -289,10 +276,6 @@ a:nth-child(4) {
     width: 90%;
   }
 
-  nav {
-    width: 100%;
-  }
-
   table {
     font-size: 14px;
   }
@@ -303,24 +286,6 @@ a:nth-child(4) {
   body {
     font-size: 14px;
     padding: 10px;
-  }
-
-
-   nav {
-    width: 100%;
-    height: auto;
-  }
-
-  nav a {
-    display: block;
-    width: 100%;
-    font-size: 14px;
-    line-height: 40px;
-  }
-
-  select {
-    width: 100%;
-    font-size: 14px;
   }
 
   .form-container {
@@ -338,11 +303,17 @@ a:nth-child(4) {
 
   table {
     font-size: 13px;
+	width: 100%;
   }
 
   td, th {
     padding: 6px;
     width: auto;
+  }
+
+  select {
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -352,27 +323,6 @@ a:nth-child(4) {
     font-size: 13px;
     padding: 5px;
   }
-
-  nav {
-    width: 100%;
-    font-size: 12px;
-	height: auto;
-  }
-  
-  
-  nav a {
-    display: block;
-    width: 100%;
-    font-size: 13px;
-    line-height: 40px;
-  }
-
-	
-  select {
-    width: 100%;
-    font-size: 13px;
-  }
-
 
   table, thead, tbody, th, td, tr {
     display: block;
@@ -399,5 +349,10 @@ a:nth-child(4) {
     white-space: nowrap;
     text-align: left;
     font-weight: bold;
+  }
+
+  select {
+    width: 100%;
+    text-align: center;
   }
 }
