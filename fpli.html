@@ -5,24 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wear Prediction</title>
     <link rel="stylesheet" href="css/wpm.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!--script src="https://code.jquery.com/jquery-3.6.0.min.js"></script-->
     <!--script src="./script/wpm.js"></script-->
 </head>
 <body onload="loadInches()">
     <div class="container">
-        <nav>
-            <a href="index.html" id="impTab">IMPELLER</a>
-            <a href="tb.html">THROATBUSH</a>
-            <a href="vol.html">VOLUTE</a>
-            <a href="fpli.html">FPLI</a>
-            <div class="animation"></div>
-        </nav>
+        <div class="hamburger" onclick="toggleMenu()"><b>MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
+		<div class="hamburger-menu" id="hamburgerMenu">
+		  <a href="./index.html">IMPELLER</a>
+		  <a href="./tb.html">THROATBUSH</a>
+		  <a href="./vol.html">VOLUTE</a>
+		  <a href="./fpli.html">FPLI</a>
+		</div>
         
-        <h1 style="color:#FFFF00;">FPLI Wear Prediction</h1> <!-- Neon yellow -->
+        <h1 style="color:seashell;">FPLI Wear Prediction</h1>
         <div class="button-container">
-            <button class="button" id="buttonInches">Inches</button>
-            <button class="button" id="buttonMM">Millimeters</button>
+            <button class="button" id="buttonImperial">Imperial</button>
+            <button class="button" id="buttonMetric">Metric</button>
         </div>
 	</div>
+	<script>
+	const buttonImperial = document.getElementById('buttonImperial');
+    const buttonMetric = document.getElementById('buttonMetric');
+	const measures = document.getElementsByClassName("measure");
+	
+	//Toggle Hamburger menu
+	function toggleMenu() {
+		const menu = document.getElementById("hamburgerMenu");
+		menu.classList.toggle("show");
+	}	
+	</script>	
 </body>
 </html>	
