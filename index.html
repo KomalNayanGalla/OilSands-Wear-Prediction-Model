@@ -205,6 +205,7 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
     const buttonMetric = document.getElementById('buttonMetric');
 	const measures = document.getElementsByClassName("measure");
 	
+	var metricFlag = 1;
 	var vaneLengths;
 	var Impacts;
 	var Hours;
@@ -672,8 +673,9 @@ const dutyConditions = {
 			//document.getElementById("sgUnits").innerHTML="lb/ft<sup>3</sup>";
 			document.getElementById("flowUnits").innerHTML="gpm";
 			
-			if(document.getElementById("eyeDiameter").value)
+			if(document.getElementById("eyeDiameter").value && metricFlag == 1)
 			{
+				metricFlag = 0;
 				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value/25.4).toFixed(2);
 				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value/25.4).toFixed(2);
 				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value/25.4).toFixed(2);
@@ -687,6 +689,7 @@ const dutyConditions = {
         buttonMetric.addEventListener('click', () => {
             buttonMetric.classList.add('selected');
             buttonImperial.classList.remove('selected');
+			
             for (var i = 0; i < measures.length; i++) {
                 measures[i].innerHTML = 'mm';
             }
@@ -695,8 +698,9 @@ const dutyConditions = {
 			//document.getElementById("sgUnits").innerHTML="kg/m<sup>3</sup>";
 			document.getElementById("flowUnits").innerHTML="m<sup>3</sup>/hr";
 			
-			if(document.getElementById("eyeDiameter").value)
+			if(document.getElementById("eyeDiameter").value && metricFlag == 0)
 			{
+				metricFlag = 1;
 				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value*25.4).toFixed(2);
 				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value*25.4).toFixed(2);
 				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value*25.4).toFixed(2);
