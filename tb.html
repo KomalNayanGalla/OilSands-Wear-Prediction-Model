@@ -723,11 +723,11 @@
 			if (data) 
 		  {
 			//document.getElementById('wearCoefficient').value = data.wearCoefficient;
-			document.getElementById('avgRPM').value = data.avgRPM;
-			document.getElementById('avgFlow').value = (data.avgFlow*4.4029).toFixed(2);
-			document.getElementById('SG').value = data.SG;
-			document.getElementById('avgHead').value = (data.avgHead*3.281).toFixed(2);
-			document.getElementById('avgD50').value = (data.avgD50*2).toFixed(2);
+			document.getElementById('avgRPM').value = data.avgRPM || '';
+			document.getElementById('avgFlow').value = data.avgFlow ? (data.avgFlow * 4.4029).toFixed(2) : '';
+			document.getElementById('SG').value = data.SG || '';
+			document.getElementById('avgHead').value = data.avgHead ? (data.avgHead * 3.281).toFixed(2) : '';
+			document.getElementById('avgD50').value = data.avgD50 ? (data.avgD50*2).toFixed(2) : '';
 		  } 
 		  else 
 		  {
