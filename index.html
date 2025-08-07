@@ -86,7 +86,7 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
                     <tr>
                         <td><label for="avgHead">Average Head</label></td>
                         <td><input type="text" id="avgHead" class="process-parameter" placeholder="extracted or custom" disabled></td>
-                        <td id="HeadUnits">m</td>
+                        <td id="headUnits">m</td>
                     </tr>
                     <tr>
                         <td><label for="SG">S.G</label></td>
@@ -206,6 +206,7 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
 	const measures = document.getElementsByClassName("measure");
 	
 	var metricFlag = 1;
+	var analysisFlag = 0;
 	var vaneLengths;
 	var Impacts;
 	var Hours;
@@ -669,18 +670,42 @@ const dutyConditions = {
                 measures[i].innerHTML = 'in';
             }
 			document.getElementById("suctionVelocityUnits").innerHTML="ft/s";
-			document.getElementById("HeadUnits").innerHTML="ft";
+			document.getElementById("headUnits").innerHTML="ft";
 			//document.getElementById("sgUnits").innerHTML="lb/ft<sup>3</sup>";
 			document.getElementById("flowUnits").innerHTML="gpm";
 			
-			if(document.getElementById("eyeDiameter").value && metricFlag == 1)
+			if(metricFlag == 1)
 			{
+				if(document.getElementById("eyeDiameter").value)
+				{
+					
+					document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value/25.4).toFixed(2);
+					document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value/25.4).toFixed(2);
+					document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value/25.4).toFixed(2);
+					document.getElementById("impellerID").value= (document.getElementById("impellerID").value/25.4).toFixed(2);
+					document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value/25.4).toFixed(2);
+				}
+				if(document.getElementById("avgHead").value)
+				{
+					document.getElementById("avgHead").value = (document.getElementById("avgHead").value*3.281).toFixed(2);
+				}
+				if(document.getElementById("avgFlow").value)
+				{
+					document.getElementById("avgFlow").value = (document.getElementById("avgFlow").value*4.4029).toFixed(2);
+				}
+				if(document.getElementById("suctionVelocity").value)
+				{
+					document.getElementById("suctionVelocity").value = (document.getElementById("suctionVelocity").value*3.281).toFixed(2);
+				}
+				if(document.getElementById("startVaneLength").value)
+				{
+					document.getElementById("startVaneLength").value = (document.getElementById("startVaneLength").value/25.4).toFixed(2);
+				}
 				metricFlag = 0;
-				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value/25.4).toFixed(2);
-				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value/25.4).toFixed(2);
-				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value/25.4).toFixed(2);
-				document.getElementById("impellerID").value= (document.getElementById("impellerID").value/25.4).toFixed(2);
-				document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value/25.4).toFixed(2);
+			}
+			if(analysisFlag == 1)
+			{
+				analyse();
 			}
 
         });
@@ -694,18 +719,42 @@ const dutyConditions = {
                 measures[i].innerHTML = 'mm';
             }
 			document.getElementById("suctionVelocityUnits").innerHTML="m/s";
-			document.getElementById("HeadUnits").innerHTML="m";
+			document.getElementById("headUnits").innerHTML="m";
 			//document.getElementById("sgUnits").innerHTML="kg/m<sup>3</sup>";
 			document.getElementById("flowUnits").innerHTML="m<sup>3</sup>/hr";
 			
-			if(document.getElementById("eyeDiameter").value && metricFlag == 0)
+			if(metricFlag == 0)
 			{
+				if(document.getElementById("eyeDiameter").value)
+				{
+					
+					document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value*25.4).toFixed(2);
+					document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value*25.4).toFixed(2);
+					document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value*25.4).toFixed(2);
+					document.getElementById("impellerID").value= (document.getElementById("impellerID").value*25.4).toFixed(2);
+					document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value*25.4).toFixed(2);
+				}
+				if(document.getElementById("avgHead").value)
+				{
+					document.getElementById("avgHead").value = (document.getElementById("avgHead").value/3.281).toFixed(2);
+				}
+				if(document.getElementById("avgFlow").value)
+				{
+					document.getElementById("avgFlow").value = (document.getElementById("avgFlow").value/4.4029).toFixed(2);
+				}
+				if(document.getElementById("suctionVelocity").value)
+				{
+					document.getElementById("suctionVelocity").value = (document.getElementById("suctionVelocity").value/3.281).toFixed(2);
+				}
+				if(document.getElementById("startVaneLength").value)
+				{
+					document.getElementById("startVaneLength").value = (document.getElementById("startVaneLength").value*25.4).toFixed(2);
+				}
 				metricFlag = 1;
-				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value*25.4).toFixed(2);
-				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value*25.4).toFixed(2);
-				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value*25.4).toFixed(2);
-				document.getElementById("impellerID").value= (document.getElementById("impellerID").value*25.4).toFixed(2);
-				document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value*25.4).toFixed(2);
+			}
+			if(analysisFlag == 1)
+			{
+				analyse();
 			}
 			
         });
@@ -994,319 +1043,217 @@ const dutyConditions = {
 
 	
 	//Calculate VLs,Impacts, Hours and display graph
-	function analyse()
-		{
-			
-			validateAnalyse();
-			vaneLengths = [];
-			Hours = [];
-			Impacts = [];
-			var bestCaseHours = [];
-			var worstCaseHours = [];
-			Hours = [];
-			Impacts = [];
-			
-			//Reference values
-			var refTonnage = 5000;
-			var refImpact = 15.4;
-		
-			var startHours = parseFloat(document.getElementById("startHours").value);
-			var averageFlow = parseFloat(document.getElementById("avgFlow").value);
-			var eyeDiameter = parseFloat(document.getElementById("eyeDiameter").value);
-			var specificGravity = parseFloat(document.getElementById("SG").value);
-			var averageRPM = parseFloat(document.getElementById("avgRPM").value);
-			var startVL = parseFloat(document.getElementById("startVaneLength").value);
-			var failVL = parseFloat(document.getElementById("failureVaneLength").value);
-			var nominalVaneLength = parseFloat(document.getElementById("nominalVaneLength").value);
-			var impellerID = parseFloat(document.getElementById("impellerID").value);
-			var impellerOD = parseFloat(document.getElementById("impellerOD").value);
-			var exponent = parseFloat(document.getElementById('exponentValue').textContent);
-			var wearCoefficient = parseFloat(document.getElementById("wearCoefficient").value);
-			
-			if (buttonImperial.classList.contains('selected')) { // If Imperial
-			
-			var suctionVelocity = (averageFlow / (4.4029 * 3600))*3.281/(Math.PI*Math.pow(( eyeDiameter*0.0254/2),2)); //ft/s - FLOW in GPM, Eye in inches
-			var solidsWeightPercent = -(((1/specificGravity)-1)/((2.65-1)/2.65)); 
-			var averageTonnage = ((specificGravity-0.99)/(2.65-0.99))*(averageFlow/4.4029)*2.65; //if flow in gpm		
+	function analyse() 
+	{
+		validateAnalyse();
+		vaneLengths = [];
+		var bestCaseHours = [];
+		var worstCaseHours = [];
+		Hours = [];
+		Impacts = [];
+
+		analysisFlag = 1;
+
+		// Reference values
+		var refTonnage = 5000;
+		var refImpact = 15.4;
+
+		var startHours = parseFloat(document.getElementById("startHours").value);
+		var averageFlow = parseFloat(document.getElementById("avgFlow").value);
+		var eyeDiameter = parseFloat(document.getElementById("eyeDiameter").value);
+		var specificGravity = parseFloat(document.getElementById("SG").value);
+		var averageRPM = parseFloat(document.getElementById("avgRPM").value);
+		var startVL = parseFloat(document.getElementById("startVaneLength").value);
+		var failVL = parseFloat(document.getElementById("failureVaneLength").value);
+		var nominalVaneLength = parseFloat(document.getElementById("nominalVaneLength").value);
+		var impellerID = parseFloat(document.getElementById("impellerID").value);
+		var impellerOD = parseFloat(document.getElementById("impellerOD").value);
+		var exponent = parseFloat(document.getElementById('exponentValue').textContent);
+		var wearCoefficient = parseFloat(document.getElementById("wearCoefficient").value);
+
+		if (buttonImperial.classList.contains('selected')) {
+			var suctionVelocity = (averageFlow / (4.4029 * 3600)) * 3.281 / (Math.PI * Math.pow((eyeDiameter * 0.0254 / 2), 2));
+			var solidsWeightPercent = -(((1 / specificGravity) - 1) / ((2.65 - 1) / 2.65));
+			var averageTonnage = ((specificGravity - 0.99) / (2.65 - 0.99)) * (averageFlow / 4.4029) * 2.65;
+
 			document.getElementById("suctionVelocity").value = suctionVelocity.toFixed(9);
 			document.getElementById("solidsWeightPercent").value = solidsWeightPercent.toFixed(9);
 			document.getElementById("avgTonnage").value = averageTonnage.toFixed(9);
-			
-			for (var vl = startVL; vl >= failVL; vl = vl-((startVL-failVL)/25)) {
-                vaneLengths.push(vl.toFixed(2));}
-			
-			for (var i=0; i<vaneLengths.length; i++)
-			{
-				Impacts.push((Math.sqrt(Math.pow(suctionVelocity/3.281, 2) + Math.pow(Math.PI * (averageRPM / 60)*0.0254* (impellerID + ((nominalVaneLength - vaneLengths[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6)); //suctionVelocity in ft/s and dim in inches
+
+			for (var vl = startVL; vl >= failVL; vl -= ((startVL - failVL) / 25)) {
+				vaneLengths.push(vl.toFixed(2));
 			}
-			
-			//Changing Reference Impact from values
+
+			for (var i = 0; i < vaneLengths.length; i++) {
+				Impacts.push((Math.sqrt(Math.pow(suctionVelocity / 3.281, 2) + Math.pow(Math.PI * (averageRPM / 60) * 0.0254 * (impellerID + ((nominalVaneLength - vaneLengths[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6));
+			}
+
 			refImpact = parseFloat(((parseFloat(Impacts[0]) + parseFloat(Impacts[1]) + parseFloat(Impacts[2]) + parseFloat(Impacts[3]) + parseFloat(Impacts[4]) + parseFloat(Impacts[5])) / 6).toFixed(2));
-			
-			for (var i=0; i<vaneLengths.length; i++)
-			{
-				if(i==0)
-				{
+
+			for (var i = 0; i < vaneLengths.length; i++) {
+				if (i == 0) {
 					Hours.push(startHours);
 					bestCaseHours.push(startHours);
 					worstCaseHours.push(startHours);
-					//document.getElementById("x").innerHTML += "Hrs[i-1]:"+Hours[0];
-				}
-				else
-				{
-				    //document.getElementById("x").innerHTML += "Hrs[]:"+Hours//[i-1]+ ",VL[i]" + vaneLengths[i] + ",VL[i-1]" + vaneLengths[i-1];
-					Hours.push(parseFloat((Hours[i-1]+(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],exponent)).toFixed(4)));
-					bestCaseHours.push(parseFloat((bestCaseHours[i-1]+(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],2)).toFixed(4)));
-					worstCaseHours.push(parseFloat((worstCaseHours[i-1]+(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],3)).toFixed(4)));
-					//document.getElementById("x").innerHTML = "Best : "+bestCaseHours+"<br> Worst :"+worstCaseHours;
+				} else {
+					Hours.push(parseFloat((Hours[i - 1] + (vaneLengths[i - 1] - vaneLengths[i]) * wearCoefficient * (refTonnage / averageTonnage) * Math.pow(refImpact / Impacts[i - 1], exponent)).toFixed(4)));
+					bestCaseHours.push(parseFloat((bestCaseHours[i - 1] + (vaneLengths[i - 1] - vaneLengths[i]) * wearCoefficient * (refTonnage / averageTonnage) * Math.pow(refImpact / Impacts[i - 1], 2)).toFixed(4)));
+					worstCaseHours.push(parseFloat((worstCaseHours[i - 1] + (vaneLengths[i - 1] - vaneLengths[i]) * wearCoefficient * (refTonnage / averageTonnage) * Math.pow(refImpact / Impacts[i - 1], 3)).toFixed(4)));
 				}
 			}
-			document.getElementById("totalLifeSpan").value = Hours[20];
-			//document.getElementById("x").innerHTML = vaneLengths+"<br>"+Impacts;
-			var t = "";
-			for (var i = 0; i < vaneLengths.length; i++){
-				  var tr = "<tr>";
-				  tr += "<td style='text-align:center;'>"+Impacts[i]+"</td>";
-				  tr += "<td style='text-align:center;'>"+vaneLengths[i]+"</td>";
-				  tr += "<td style='text-align:center;'>"+Hours[i]+"</td>";
-				  tr += "</tr>";
-				  t += tr;
-			}
-			document.getElementById("tableBody").innerHTML = t;
-			
-			//GRAPH 
-			
-			const ctx = document.getElementById('lineGraph').getContext('2d');
-			if (lineGraph) {
-				lineGraph.data.datasets[0].data = Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
-				lineGraph.data.datasets[1].data = bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
-				lineGraph.data.datasets[2].data = worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
-				lineGraph.update();
-			} else {
-				lineGraph = new Chart(ctx, {
-					type: 'line',
-					data: {
-						datasets: [
-							{
-								label: 'Hours',
-								data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-								borderColor: 'white',
-								borderWidth: 2,
-								lineTension: 0.4, // Adjust this value to control the curve
-								pointStyle: 'triangle'
-							},
-							{
-								label: 'Best Case Hours',
-								data: bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-								borderColor: 'lime',
-								borderWidth: 1,
-								lineTension: 0.4 // Adjust this value to control the curve
-							},
-							{
-								label: 'Worst Case Hours',
-								data: worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-								borderColor: '#f7f749',
-								borderWidth: 1,
-								lineTension: 0.4 // Adjust this value to control the curve
-							}
-						]
-					},
-					options: {
-						scales: {
-							x: {
-								type: 'linear',
-								title: {
-									display: true,
-									text: 'Hours',
-									color: '#F2D2BD',
-									font : {size : 20}
-								},
-								min: 0,
-								max: 8000,
-								ticks: {
-									stepSize: 500, // Ensure labels are spaced by 500
-									color: 'white' 
-								},
-								grid: {
-									display: true, // Enable grid lines
-									color: '#A9A9A9' // Set grid line color
-								}
-							},
-							y: {
-								title: {
-									display: true,
-									text: 'Vane Length',
-									color: 'white',
-									font : {size : 20}
-								},
-								min: 0,
-								max: 80,
-								ticks: {
-									stepSize: 10, // Ensure labels are spaced by 10
-									color: 'white' 
-								},
-								grid: {
-									display: true, // Enable grid lines
-									color: '#A9A9A9' // Set grid line color
-								}
-							}
+		} else {
+			var suctionVelocity = (averageFlow / 3600) / (Math.PI * Math.pow((eyeDiameter * 0.0254 * 0.0394 / 2), 2));
+			var solidsWeightPercent = -(((1 / specificGravity) - 1) / ((2.65 - 1) / 2.65));
+			var averageTonnage = ((specificGravity - 0.99) / (2.65 - 0.99)) * averageFlow * 2.65;
 
-						},					
-						plugins: {
-                			legend: {
-                    				labels: {
-                        					color: 'white' // Change legend font color to white
-                    						}
-                					}
-            					}
-					}
-				});
-			}
-
-			}//end of Imperial logic
-			
-			//METRIC LOGIC
-			else{
-			var suctionVelocity = (averageFlow/3600)/(Math.PI*Math.pow(( eyeDiameter*0.0254*0.0394/2),2)); //m/s
-			var solidsWeightPercent = -(((1/specificGravity)-1)/((2.65-1)/2.65)); 
-			var averageTonnage = ((specificGravity-0.99)/(2.65-0.99))*averageFlow*2.65; //tph, flow in m3/hr	-- what is 2.65?
 			document.getElementById("suctionVelocity").value = suctionVelocity.toFixed(9);
 			document.getElementById("solidsWeightPercent").value = solidsWeightPercent.toFixed(9);
 			document.getElementById("avgTonnage").value = averageTonnage.toFixed(9);
-			
-			for (var vl = startVL; vl >= failVL; vl = vl-((startVL-failVL)/25)) {
-                vaneLengths.push(vl.toFixed(2));}
-			
-			for (var i=0; i<vaneLengths.length; i++)
-			{
-				Impacts.push((Math.sqrt(Math.pow(suctionVelocity, 2) + Math.pow(Math.PI * (averageRPM / 60) *0.0254*0.0394 *(impellerID + ((nominalVaneLength - vaneLengths[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6)); //suctionVelocity in m/s and dim in mm
+
+			for (var vl = startVL; vl >= failVL; vl -= ((startVL - failVL) / 25)) {
+				vaneLengths.push(vl.toFixed(2));
 			}
-			
-			//Changing Reference Impact from values
+
+			for (var i = 0; i < vaneLengths.length; i++) {
+				Impacts.push((Math.sqrt(Math.pow(suctionVelocity, 2) + Math.pow(Math.PI * (averageRPM / 60) * 0.0254 * 0.0394 * (impellerID + ((nominalVaneLength - vaneLengths[i]) / nominalVaneLength) * (impellerOD - impellerID)), 2))).toFixed(6));
+			}
+
 			refImpact = parseFloat(((parseFloat(Impacts[0]) + parseFloat(Impacts[1]) + parseFloat(Impacts[2]) + parseFloat(Impacts[3]) + parseFloat(Impacts[4]) + parseFloat(Impacts[5])) / 6).toFixed(2));
 
-			for (var i=0; i<vaneLengths.length; i++)
-			{
-				if(i==0)
-				{
+			for (var i = 0; i < vaneLengths.length; i++) {
+				if (i == 0) {
 					Hours.push(startHours);
 					bestCaseHours.push(startHours);
 					worstCaseHours.push(startHours);
-					//document.getElementById("x").innerHTML += "Hrs[i-1]:"+Hours[0];
-				}
-				else
-				{
-				    //document.getElementById("x").innerHTML += "Hrs[]:"+Hours//[i-1]+ ",VL[i]" + vaneLengths[i] + ",VL[i-1]" + vaneLengths[i-1];
-					Hours.push(parseFloat((Hours[i-1]+0.0394*(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],exponent)).toFixed(4)));
-					bestCaseHours.push(parseFloat((bestCaseHours[i-1]+0.0394*(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],2)).toFixed(4)));
-					worstCaseHours.push(parseFloat((worstCaseHours[i-1]+0.0394*(vaneLengths[i-1]-vaneLengths[i])*wearCoefficient*(refTonnage/averageTonnage)*Math.pow(refImpact/Impacts[i-1],3)).toFixed(4)));
-					//document.getElementById("x").innerHTML = "Best : "+bestCaseHours+"<br> Worst :"+worstCaseHours;
+				} else {
+					Hours.push(parseFloat((Hours[i - 1] + 0.0394 * (vaneLengths[i - 1] - vaneLengths[i]) * wearCoefficient * (refTonnage / averageTonnage) * Math.pow(refImpact / Impacts[i - 1], exponent)).toFixed(4)));
+					bestCaseHours.push(parseFloat((bestCaseHours[i - 1] + 0.0394 * (vaneLengths[i - 1] - vaneLengths[i]) * wearCoefficient * (refTonnage / averageTonnage) * Math.pow(refImpact / Impacts[i - 1], 2)).toFixed(4)));
+					worstCaseHours.push(parseFloat((worstCaseHours[i - 1] + 0.0394 * (vaneLengths[i - 1] - vaneLengths[i]) * wearCoefficient * (refTonnage / averageTonnage) * Math.pow(refImpact / Impacts[i - 1], 3)).toFixed(4)));
 				}
 			}
-			document.getElementById("totalLifeSpan").value = Hours[20]; //20 should be customizable
-			//document.getElementById("x").innerHTML = vaneLengths+"<br>"+Impacts;
-			var t = "";
-			for (var i = 0; i < vaneLengths.length; i++){
-				  var tr = "<tr>";
-				  tr += "<td style='text-align:center;'>"+Impacts[i]+"</td>";
-				  tr += "<td style='text-align:center;'>"+vaneLengths[i]+"</td>";
-				  tr += "<td style='text-align:center;'>"+Hours[i]+"</td>";
-				  tr += "</tr>";
-				  t += tr;
-			}
-			document.getElementById("tableBody").innerHTML = t;
-			
-			//GRAPH 
-			
-			const ctx = document.getElementById('lineGraph').getContext('2d');
-			if (lineGraph) {
-				lineGraph.data.datasets[0].data = Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
-				lineGraph.data.datasets[1].data = bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
-				lineGraph.data.datasets[2].data = worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
-				lineGraph.update();
-			} else {
-				lineGraph = new Chart(ctx, {
-					type: 'line',
-					data: {
-						datasets: [
-							{
-								label: 'Hours',
-								data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-								borderColor: 'white',
-								borderWidth: 2,
-								lineTension: 0.4, // Adjust this value to control the curve
-								pointStyle: 'triangle'
-							},
-							{
-								label: 'Best Case Hours',
-								data: bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-								borderColor: 'lime',
-								borderWidth: 1,
-								lineTension: 0.4 // Adjust this value to control the curve
-							},
-							{
-								label: 'Worst Case Hours',
-								data: worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-								borderColor: '#f7f749',
-								borderWidth: 1,
-								lineTension: 0.4 // Adjust this value to control the curve
-							}
-						]
-					},
-					options: {
-						scales: {
-							x: {
-								type: 'linear',
-								title: {
-									display: true,
-									text: 'Hours',
-									color: '#F2D2BD',
-									font : {size : 20}
-								},
-								min: 0,
-								max: 8000,
-								ticks: {
-									stepSize: 500, // Ensure labels are spaced by 500
-									color: 'white' 
-								},
-								grid: {
-									display: true, // Enable grid lines
-									color: '#A9A9A9' // Set grid line color
-								}
-							},
-							y: {
-								title: {
-									display: true,
-									text: 'Vane Length',
-									color: 'white',
-									font : {size : 20}
-								},
-								min: 0,
-								max: 1700,
-								ticks: {
-									stepSize: 100, // Ensure labels are spaced by 100
-									color: 'white' 
-								},
-								grid: {
-									display: true, // Enable grid lines
-									color: '#A9A9A9' // Set grid line color
-								}
-							}
-
-						},					
-						plugins: {
-                			legend: {
-                    				labels: {
-                        					color: 'white' // Change legend font color to white
-                    						}
-                					}
-            					}
-					}
-				});
-			}
-			} // end of metric logic
 		}
-		
+
+		document.getElementById("totalLifeSpan").value = Hours[20];
+
+		var t = "";
+		for (var i = 0; i < vaneLengths.length; i++) {
+			t += `<tr>
+				<td style='text-align:center;'>${Impacts[i]}</td>
+				<td style='text-align:center;'>${vaneLengths[i]}</td>
+				<td style='text-align:center;'>${Hours[i]}</td>
+			</tr>`;
+		}
+		document.getElementById("tableBody").innerHTML = t;
+
+		//Graph Section
+		const numericHours = Hours.map(Number);
+		const numericVaneLengths = vaneLengths.map(Number);
+
+		const xMin = 0;
+		const xMax = Math.ceil(Math.max(...numericHours) / 1000) * 1000;
+		const xStepSize = Math.ceil((xMax - xMin) / 10);
+
+		const yMin = 0;
+		const yMax = Math.ceil(Math.max(...numericVaneLengths) / 50) * 50;
+		const yStepSize = Math.ceil((yMax - yMin) / 10);
+
+		const ctx = document.getElementById('lineGraph').getContext('2d');
+		if (lineGraph) {
+			lineGraph.data.datasets[0].data = Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+			lineGraph.data.datasets[1].data = bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+			lineGraph.data.datasets[2].data = worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] }));
+
+			lineGraph.options.scales.x.min = xMin;
+			lineGraph.options.scales.x.max = xMax;
+			lineGraph.options.scales.x.ticks.stepSize = xStepSize;
+
+			lineGraph.options.scales.y.min = yMin;
+			lineGraph.options.scales.y.max = yMax;
+			lineGraph.options.scales.y.ticks.stepSize = yStepSize;
+
+			lineGraph.update();
+		} else {
+			lineGraph = new Chart(ctx, {
+				type: 'line',
+				data: {
+					datasets: [
+						{
+							label: 'Hours',
+							data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+							borderColor: 'white',
+							borderWidth: 2,
+							lineTension: 0.4,
+							pointStyle: 'triangle'
+						},
+						{
+							label: 'Best Case Hours',
+							data: bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+							borderColor: 'lime',
+							borderWidth: 1,
+							lineTension: 0.4
+						},
+						{
+							label: 'Worst Case Hours',
+							data: worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
+							borderColor: '#f7f749',
+							borderWidth: 1,
+							lineTension: 0.4
+						}
+					]
+				},
+				options: {
+					scales: {
+						x: {
+							type: 'linear',
+							title: {
+								display: true,
+								text: 'Hours',
+								color: '#F2D2BD',
+								font: { size: 20 }
+							},
+							min: xMin,
+							max: xMax,
+							ticks: {
+								stepSize: xStepSize,
+								color: 'white'
+							},
+							grid: {
+								display: true,
+								color: '#A9A9A9'
+							}
+						},
+						y: {
+							title: {
+								display: true,
+								text: 'Vane Length',
+								color: 'white',
+								font: { size: 20 }
+							},
+							min: yMin,
+							max: yMax,
+							ticks: {
+								stepSize: yStepSize,
+								color: 'white'
+							},
+							grid: {
+								display: true,
+								color: '#A9A9A9'
+							}
+						}
+					},
+					plugins: {
+						legend: {
+							labels: {
+								color: 'white'
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+
+
     </script>	
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
