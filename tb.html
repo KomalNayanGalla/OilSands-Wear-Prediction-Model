@@ -64,7 +64,7 @@
                     <tr>
                         <td><label for="avgHead">Average Head</label></td>
                         <td><input type="text" id="avgHead" class="process-parameter" placeholder="extracted or custom" disabled></td>
-                        <td id="HeadUnits">m</td>
+                        <td id="headUnits">m</td>
                     </tr>
                     <tr>
                         <td><label for="SG">S.G</label></td>
@@ -159,6 +159,8 @@
     const buttonImperial = document.getElementById('buttonImperial');
     const buttonMetric = document.getElementById('buttonMetric');
 	const measures = document.getElementsByClassName("measure");
+	
+	var metricFlag = 1;	
 	
 	//TB-IMP Compatibility
 	const compatibilityMap = {
@@ -822,19 +824,23 @@
             }
 			document.getElementById("impTipSpeedUnits").innerHTML="ft/s";
 			document.getElementById("eyeTipSpeedUnits").innerHTML="ft/s";
-			document.getElementById("HeadUnits").innerHTML="ft";
+			document.getElementById("headUnits").innerHTML="ft";
 			//document.getElementById("sgUnits").innerHTML="lb/ft<sup>3</sup>";
 			document.getElementById("flowUnits").innerHTML="gpm";
 			
-			if(document.getElementById("eyeDiameter").value)
+			if(metricFlag == 1)
 			{
-				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value/25.4).toFixed(2);
-				document.getElementById("throatbushID").value= (document.getElementById("throatbushID").value/25.4).toFixed(2);
-				document.getElementById("throatbushOD").value= (document.getElementById("throatbushOD").value/25.4).toFixed(2);
-			}
-			if(document.getElementById("impellerID").value)
-			{
-				document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value/25.4).toFixed(2);
+				if(document.getElementById("eyeDiameter").value)
+				{
+					document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value/25.4).toFixed(2);
+					document.getElementById("throatbushID").value= (document.getElementById("throatbushID").value/25.4).toFixed(2);
+					document.getElementById("throatbushOD").value= (document.getElementById("throatbushOD").value/25.4).toFixed(2);
+				}
+				if(document.getElementById("impellerOD").value)
+				{
+					document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value/25.4).toFixed(2);
+				}
+				metricFlag = 0;				
 			}
 
         });
@@ -846,18 +852,25 @@
             for (var i = 0; i < measures.length; i++) {
                 measures[i].innerHTML = 'mm';
             }
-			document.getElementById("suctionVelocityUnits").innerHTML="m/s";
-			document.getElementById("HeadUnits").innerHTML="m";
-			//document.getElementById("sgUnits").innerHTML="kg/m<sup>3</sup>";
+			document.getElementById("impTipSpeedUnits").innerHTML="m/s";
+			document.getElementById("eyeTipSpeedUnits").innerHTML="m/s";
+			document.getElementById("headUnits").innerHTML="m";
+			//document.getElementById("sgUnits").innerHTML="lb/ft<sup>3</sup>";
 			document.getElementById("flowUnits").innerHTML="m<sup>3</sup>/hr";
 			
-			if(document.getElementById("eyeDiameter").value)
-			{
-				document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value*25.4).toFixed(2);
-				document.getElementById("nominalVaneLength").value= (document.getElementById("nominalVaneLength").value*25.4).toFixed(2);
-				document.getElementById("failureVaneLength").value = (document.getElementById("failureVaneLength").value*25.4).toFixed(2);
-				document.getElementById("impellerID").value= (document.getElementById("impellerID").value*25.4).toFixed(2);
-				document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value*25.4).toFixed(2);
+			if(metricFlag == 0)
+			{	
+				if(document.getElementById("eyeDiameter").value)
+				{
+					document.getElementById("eyeDiameter").value= (document.getElementById("eyeDiameter").value*25.4).toFixed(2);
+					document.getElementById("throatbushID").value= (document.getElementById("throatbushID").value*25.4).toFixed(2);
+					document.getElementById("throatbushOD").value= (document.getElementById("throatbushOD").value*25.4).toFixed(2);
+				}
+				if(document.getElementById("impellerOD").value)
+				{
+					document.getElementById("impellerOD").value= (document.getElementById("impellerOD").value*25.4).toFixed(2);
+				}
+				metricFlag = 1;				
 			}
 			
         });
