@@ -329,42 +329,77 @@ label {
 }
 
 /* Smartphones (portrait) */
+/* Smartphones (portrait) — label on top, input + units on one row */
 @media (max-width: 480px) {
-  body {
-    font-size: 0.85rem;
-    padding: 5px;
-  }
-
-  table, thead, tbody, th, td, tr {
-    display: block;
+  /* Keep table behavior but lay out each row with CSS Grid */
+  table {
     width: 100%;
+    border-collapse: separate;
   }
 
+  /* Each TR becomes a 2-row grid:
+     Row 1: label spanning full width
+     Row 2: input (flexible) + units (content-width)
+  */
   tr {
-    margin-bottom: 15px;
-    border-bottom: 2px solid #ddd;
+    display: grid;
+    grid-template-columns: 1fr auto;    /* input grows, units hug content */
+    grid-template-areas:
+      "label label"
+      "input unit";
+    row-gap: 6px;
+    column-gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
   }
 
-  td {
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-  }
-
-  td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 10px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
+  /* First cell is the label row */
+  tr > td:nth-child(1),
+  tr > th:nth-child(1) {
+    grid-area: label;
     text-align: left;
-    font-weight: bold;
+    padding: 0;             /* tighter on mobile */
   }
 
-  select {
+  /* Second cell is the input/control */
+  tr > td:nth-child(2),
+  tr > th:nth-child(2) {
+    grid-area: input;
+    text-align: left;
+  }
+
+  /* Third cell (when present) is the units/measure */
+  tr > td:nth-child(3),
+  tr > th:nth-child(3) {
+    grid-area: unit;
+    white-space: nowrap;     /* keep “m³/hr”, “m/s”, etc. on one line */
+    text-align: left;
+  }
+
+  /* Make form controls fill the input column nicely */
+  tr > td:nth-child(2) input[type="text"],
+  tr > td:nth-child(2) input[type="number"],
+  tr > td:nth-child(2) input[type="range"],
+  tr > td:nth-child(2) select {
     width: 100%;
-    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Rows that use colspan (e.g., the Analyse button) should span full width */
+  tr > td[colspan] {
+    grid-column: 1 / -1;     /* span both columns */
+  }
+
+  /* Tweak specialty rows */
+  /* Toggle row (first row) still works: label on top, toggle right under it */
+  .checkbox-wrapper-3 {
+    justify-self: start;     /* keep the toggle left-aligned under the label */
+  }
+
+  /* Optional: soften the divider on dark background */
+  tr:last-child {
+    border-bottom: none;
   }
 }
+
 .table-container { overflow-x: auto; }
