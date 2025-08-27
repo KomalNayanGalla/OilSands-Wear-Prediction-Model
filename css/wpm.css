@@ -335,7 +335,7 @@ label {
     padding: 5px;
   }
 
-  table, thead, tbody, th, td, tr {
+  /*table {
     display: block;
     width: 100%;
   }
@@ -347,7 +347,6 @@ label {
 
   td {
     text-align: right;
-    padding-left: 50%;
     position: relative;
   }
 
@@ -360,6 +359,33 @@ label {
     white-space: nowrap;
     text-align: left;
     font-weight: bold;
+  }
+
+  select {
+    width: 100%;
+    text-align: center;
+  }*/
+  .form-container {
+    width: 100%;
+  }
+
+  .content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .graph-container {
+    width: 100%;
+  }
+
+  table {
+    font-size: 13px;
+	width: 100%;
+  }
+
+  td, th {
+    padding: 6px;
+    width: auto;
   }
 
   select {
