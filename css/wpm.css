@@ -8,6 +8,19 @@ body {
    font-family: Arial, sans-serif; 
 }
 
+#lineGraph {
+  display: block;
+  width: 100% !important;
+  height: 100%;
+}
+
+
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 
 
 th {
@@ -77,6 +90,8 @@ select:focus {
 
 .graph-container {
    width: 40%;
+   max-width: 100%;
+   height: auto;
 }
 .table-container {
    margin-top: 20px;
@@ -94,8 +109,7 @@ input[type="text"] {
    border: 1px solid white;
 }
 
-        td,
-th {
+td,th {
    width: 150px;
 }
 
@@ -334,37 +348,7 @@ label {
     font-size: 13px;
     padding: 5px;
   }
-
-  /*table {
-    display: block;
-    width: 100%;
-  }
-
-  tr {
-    margin-bottom: 15px;
-    border-bottom: 2px solid #ddd;
-  }
-
-  td {
-    text-align: right;
-    position: relative;
-  }
-
-  td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 10px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-    text-align: left;
-    font-weight: bold;
-  }
-
-  select {
-    width: 100%;
-    text-align: center;
-  }*/
+  
   .form-container {
     width: 100%;
   }
@@ -378,7 +362,7 @@ label {
   }
   input[type="text"]
   {
-	  width: 142%;
+	  width: 130%;
 	  box-sizing: border-box;
   }
   
@@ -388,9 +372,14 @@ label {
 
   .graph-container {
     width: 100%;
+	height: 250px;
   }
 
-  
+  #lineGraph {
+    height: 100% !important;
+    width: 100% !important;
+  }
+
   label{
 	  text-align: left;
 	  margin-left:0px;
