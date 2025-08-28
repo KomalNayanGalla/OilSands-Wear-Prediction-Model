@@ -1055,6 +1055,10 @@ const dutyConditions = {
 		var worstCaseHours = [];
 		Hours = [];
 		Impacts = [];
+		
+		const isMobile = window.innerWidth < 768;
+		const fontSize = isMobile ? 12 : 20;
+		
 
 		analysisFlag = 1;
 
@@ -1206,6 +1210,14 @@ const dutyConditions = {
 					]
 				},
 				options: {
+				    responsive:true,
+					maintainAspectRatio:false,
+					layout:{
+							padding:{
+								left:0,
+								right:0
+							}
+					},
 					scales: {
 						x: {
 							type: 'linear',
@@ -1213,13 +1225,16 @@ const dutyConditions = {
 								display: true,
 								text: 'Hours',
 								color: '#F2D2BD',
-								font: { size: 20 }
+								font: { size: fontSize }
 							},
 							min: xMin,
 							max: xMax,
 							ticks: {
 								stepSize: xStepSize,
-								color: 'white'
+								color: 'white',
+								align: 'center',
+								padding: 0,
+								font: { size: fontSize - 2 }
 							},
 							grid: {
 								display: true,
@@ -1231,13 +1246,14 @@ const dutyConditions = {
 								display: true,
 								text: 'Vane Length',
 								color: 'white',
-								font: { size: 20 }
+								font: { size: fontSize }
 							},
 							min: yMin,
 							max: yMax,
 							ticks: {
 								stepSize: yStepSize,
-								color: 'white'
+								color: 'white',
+								font: { size: fontSize - 2 }
 							},
 							grid: {
 								display: true,
@@ -1248,15 +1264,26 @@ const dutyConditions = {
 					plugins: {
 						legend: {
 							labels: {
-								color: 'white'
+								color: 'white',
+								font: { size: fontSize - 2}
 							}
+						},
+						tooltip: {
+						  callbacks: {
+							label: function(context) {
+							  const label = context.dataset.label || '';
+							  const x = context.parsed.x;
+							  const y = context.parsed.y;
+							  return `At ${x.toFixed(0)} ${label}: ${y.toFixed(2)}`;
+							}
+						  }
 						}
+
 					}
 				}
 			});
 		}
 	}
-
 
     </script>	
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
