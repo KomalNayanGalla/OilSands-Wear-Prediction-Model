@@ -373,9 +373,27 @@ label {
     flex-direction: column;
     align-items: stretch;
   }
+  h1{
+	  font-size: 20px;
+  }
+  input[type="text"]
+  {
+	  width: 142%;
+	  box-sizing: border-box;
+  }
+  
+  #menuTitle{
+	  display: none;
+  }
 
   .graph-container {
     width: 100%;
+  }
+
+  
+  label{
+	  text-align: left;
+	  margin-left:0px;
   }
 
   table {
@@ -384,8 +402,9 @@ label {
   }
 
   td, th {
-    padding: 6px;
+	padding: 6px;
     width: auto;
+	font-size : 12px;
   }
 
   select {
