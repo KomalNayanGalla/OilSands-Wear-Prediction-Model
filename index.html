@@ -37,7 +37,7 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
 </head>
 <body onload="loadMetric()">
     <div class="container">
-        <div class="hamburger" onclick="toggleMenu()"><b>MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
+        <div class="hamburger" onclick="toggleMenu()"><b id="menuTitle">MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
 		<div class="hamburger-menu" id="hamburgerMenu">
 		  <a href="./index.html">IMPELLER</a>
 		  <a href="./tb.html">THROATBUSH</a>
@@ -75,18 +75,19 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
 			</select>
                 <table>
 					<tr>
-						<td style="color:yellow;font-size:12px;text-align:center;">Custom Duty Conditions</td>
-						<td class="checkbox-wrapper-3" style="text-align: center;"><input type="checkbox" id="cbx-3" /><label for="cbx-3" class="toggle"><span></span></label></td>
+						<td style="color:yellow;font-size:12px;text-align:center;" id="cDCLabel">Custom Duty Conditions</td>
+						<td class="checkbox-wrapper-3" style="text-align: left; margin-left:0;"><input type="checkbox" id="cbx-3" /><label for="cbx-3" class="toggle"><span></span></label></td>
 					</tr>
 					<!--PROCESS-->
                     <tr>
                         <td><label for="avgRPM">Average RPM</label></td>
                         <td><input type="text" id="avgRPM" class="process-parameter" placeholder="extracted or custom" disabled></td>
+						<td id="rpmUnits" class="units">rpm</td>
                     </tr>
                     <tr>
                         <td><label for="avgHead">Average Head</label></td>
                         <td><input type="text" id="avgHead" class="process-parameter" placeholder="extracted or custom" disabled></td>
-                        <td id="headUnits">m</td>
+                        <td id="headUnits" class="units">m</td>
                     </tr>
                     <tr>
                         <td><label for="SG">S.G</label></td>
@@ -95,12 +96,12 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
                     <tr>
                         <td><label for="avgFlow">Average Flow</label></td>
                         <td><input type="text" id="avgFlow" class="process-parameter" placeholder="extracted or custom" disabled></td>
-						<td id="flowUnits">m<sup>3</sup>/hr</td>
+						<td id="flowUnits" class="units">m<sup>3</sup>/hr</td>
                     </tr>
                     <tr>
                         <td><label for="avgTonnage">Average Tonnage</label></td>
                         <td><input type="text" class="disabled" id="avgTonnage" placeholder="to be calculated" disabled></td>
-						<td id="tonnageUnits">tph</td>
+						<td id="tonnageUnits" class="units">tph</td>
                     </tr>
                     <tr>
                         <td><label for="solidsWeightPercent">Solids Weight %</label></td>
@@ -108,7 +109,8 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
                     </tr>
 					<tr>
                         <td><label for="suctionVelocity">Suction Velocity</label></td>
-                        <td><input type="text" class="disabled" id="suctionVelocity" placeholder="to be calculated" disabled></td><td id="suctionVelocityUnits">m/s</td>
+                        <td><input type="text" class="disabled" id="suctionVelocity" placeholder="to be calculated" disabled></td>
+						<td id="suctionVelocityUnits" class="units">m/s</td>
                     </tr>
 					<tr>
 					<td><br></td>
@@ -116,7 +118,8 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
 					<!--USER INPUTS-->
 					<tr>
                         <td><label for="startHours" class="mandatory">Start Hours</label></td>
-                        <td><input type="text" id="startHours" placeholder="Input Start Hours" required></td><td>hrs</td>
+                        <td><input type="text" id="startHours" placeholder="Input Start Hours" required></td>
+						<td class="units">hrs</td>
                     </tr>
                     <tr>
                         <td><label for="startVaneLength" class="mandatory">Start Vane Length</label></td>
@@ -134,7 +137,8 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
                     </tr>
 					<tr>
                         <td><label for="eyeDiameter">Eye Diameter</label></td>
-                        <td><input type="text" class="disabled" id="eyeDiameter" placeholder="to be extracted" disabled></td><td class="measure"></td>
+                        <td><input type="text" class="disabled" id="eyeDiameter" placeholder="to be extracted" disabled></td>
+						<td class="measure"></td>
                     </tr>
                     <tr>
                         <td><label for="failureVaneLength" class="mandatory">Vane Length at Failure</label></td>
@@ -159,13 +163,13 @@ Average Wear Coefficient is counter-calculated and displayed in the textbox.
                     </tr>
                     <tr>
                         <td><label for="wearCoefficient">Wear Coefficient</label></td>
-                        <td><input type="text" class="disabled" id="wearCoefficient" placeholder="extractable or calculated" disabled></td>
-						<td><center><button class="seek" onclick="goalseekDisplay()">Seek Coefficient</button></td>
+                        <td><input type="text" class="disabled" id="wearCoefficient" placeholder="extracted or calculated" disabled></td>
+						<td><button class="seek" onclick="goalseekDisplay()" id="seekBtn">Seek</button></td>
                     </tr>
                     <tr>
                         <td><label for="totalLifeSpan">Total Life Span</label></td>
                         <td><input type="text" class="disabled" id="totalLifeSpan" placeholder="to be calculated" disabled><br>
-						<td id="lifeSpanUnits">hrs</td>
+						<td id="lifeSpanUnits" class="units">hrs</td>
                     </tr>
                     <tr>
                         <td colspan="3"><br><center><button class="analyse" onclick="analyse()">Analyse</button></center></td>

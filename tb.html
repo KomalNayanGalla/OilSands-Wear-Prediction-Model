@@ -11,7 +11,7 @@
 </head>
 <body onload="loadMetric()">
     <div class="container">
-        <div class="hamburger" onclick="toggleMenu()"><b>MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
+        <div class="hamburger" onclick="toggleMenu()"><b id="menuTitle">MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
 		<div class="hamburger-menu" id="hamburgerMenu">
 		  <a href="./index.html">IMPELLER</a>
 		  <a href="./tb.html">THROATBUSH</a>
@@ -60,11 +60,12 @@
                     <tr>
                         <td><label for="avgRPM">Average RPM</label></td>
                         <td><input type="text" id="avgRPM" class="process-parameter" placeholder="extracted or custom" disabled></td>
+						<td id="rpmUnits" class="units">rpm</td>
                     </tr>
                     <tr>
                         <td><label for="avgHead">Average Head</label></td>
                         <td><input type="text" id="avgHead" class="process-parameter" placeholder="extracted or custom" disabled></td>
-                        <td id="headUnits">m</td>
+                        <td id="headUnits" class="units">m</td>
                     </tr>
                     <tr>
                         <td><label for="SG">S.G</label></td>
@@ -73,17 +74,17 @@
                     <tr>
                         <td><label for="avgFlow">Average Flow</label></td>
                         <td><input type="text" id="avgFlow" class="process-parameter" placeholder="extracted or custom" disabled></td>
-						<td id="flowUnits">m<sup>3</sup>/hr</td>
+						<td id="flowUnits" class="units">m<sup>3</sup>/hr</td>
                     </tr>
                     <tr>
                         <td><label for="avgD50">Average D50</label></td>
                         <td><input type="text" id="avgD50" class="process-parameter" placeholder="extracted or custom" disabled></td>
-						<td id="d50Units">microns</td>
+						<td id="d50Units" class="units">microns</td>
                     </tr>					
                     <tr>
                         <td><label for="avgTonnage">Average Tonnage</label></td>
                         <td><input type="text" class="disabled" id="avgTonnage" placeholder="to be calculated" disabled></td>
-						<td id="tonnageUnits">tph</td>
+						<td id="tonnageUnits" class="units">tph</td>
                     </tr>
                     <tr>
                         <td><label for="solidsWeightPercent">Solids Weight %</label></td>
@@ -91,11 +92,13 @@
                     </tr>
 					<tr>
                         <td><label for="eyeTipSpeed">Eye Tip Speed</label></td>
-                        <td><input type="text" class="disabled" id="eyeTipSpeed" placeholder="to be calculated" disabled></td><td id="eyeTipSpeedUnits">m/s</td>
+                        <td><input type="text" class="disabled" id="eyeTipSpeed" placeholder="to be calculated" disabled></td>
+						<td id="eyeTipSpeedUnits" class="units">m/s</td>
                     </tr>
 					<tr>
                         <td><label for="impTipSpeed">Impeller Tip Speed</label></td>
-                        <td><input type="text" class="disabled" id="impTipSpeed" placeholder="to be calculated" disabled></td><td id="impTipSpeedUnits">m/s</td>
+                        <td><input type="text" class="disabled" id="impTipSpeed" placeholder="to be calculated" disabled></td>
+						<td id="impTipSpeedUnits" class="units">m/s</td>
                     </tr>					
 					<tr>
 					<td><br></td>
@@ -115,7 +118,8 @@
                     </tr>
 					<tr>
                         <td><label for="eyeDiameter">Eye Diameter</label></td>
-                        <td><input type="text" class="disabled" id="eyeDiameter" placeholder="to be extracted" disabled></td><td class="measure"></td>
+                        <td><input type="text" class="disabled" id="eyeDiameter" placeholder="to be extracted" disabled></td>
+						<td class="measure"></td>
                     </tr>
 					<tr>
 					<td><br></td>
@@ -140,12 +144,12 @@
                     <tr>
                         <td><label for="idWear">ID Wear</label></td>
                         <td><input type="text" class="disabled" id="idWear" placeholder="to be calculated" disabled><br>
-						<td id="idWearUnits">hrs</td>
+						<td id="idWearUnits" class="units">hrs</td>
                     </tr>
                     <tr>
                         <td><label for="odWear">OD Wear</label></td>
                         <td><input type="text" class="disabled" id="odWear" placeholder="to be calculated" disabled><br>
-						<td id="odWearUnits">hrs</td>
+						<td id="odWearUnits" class="units">hrs</td>
                     </tr>					
                     <tr>
                         <td colspan="3"><br><center><button class="analyse" onclick="analyse()">Analyse</button></center></td>
