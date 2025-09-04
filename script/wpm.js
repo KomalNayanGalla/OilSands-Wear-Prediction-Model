@@ -1,34 +1,25 @@
 	let impellerData = {};
-	fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json')
-	  .then(response => {
-		if (!response.ok) {
-		  throw new Error('Failed to load impeller data');
-		}
-		return response.json();
-	  })
-	  .then(data => {
-		impellerData = data;
-		loadMetric(); 
-	  })
-	  .catch(error => {
-		console.error('Error loading impeller data:', error);
-	  });
-	  
 	let dutyConditions = {};
-	fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json')
-	  .then(response => {
-		if (!response.ok) {
-		  throw new Error('Failed to load duty conditions');
-		}
-		return response.json();
-	  })
-	  .then(data => {
-		dutyConditions = data;
-		loadMetric(); 
-	  })
-	  .catch(error => {
-		console.error('Error loading duty conditions:', error);
-	  });
+
+	async function loadData() {
+	  try {
+		const impellerRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json');
+		const dutyRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json');
+
+		if (!impellerRes.ok) throw new Error('Impeller data failed to load');
+		if (!dutyRes.ok) throw new Error('Duty conditions failed to load');
+
+		impellerData = await impellerRes.json();
+		dutyConditions = await dutyRes.json();
+
+		loadMetric(); // Only called once, after both are loaded
+	  } catch (error) {
+		console.error('Data loading error:', error);
+	  }
+	}
+
+	loadData();
+
 
 	
 	const buttonImperial = document.getElementById('buttonImperial');
