@@ -1,16 +1,12 @@
 	let impellerData = {};
-	let dutyConditions = {};
 
 	async function loadData() {
 	  try {
 		const impellerRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json');
-		const dutyRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json');
 
 		if (!impellerRes.ok) throw new Error('Impeller data failed to load');
-		if (!dutyRes.ok) throw new Error('Duty conditions failed to load');
 
 		impellerData = await impellerRes.json();
-		dutyConditions = await dutyRes.json();
 
 		loadMetric(); // Only called once, after both are loaded
 	  } catch (error) {
@@ -157,7 +153,7 @@ AVERAGE DUTY Conditions - Metric
 +------------+--------+
 */
 
-/*const dutyConditions = {
+const dutyConditions = {
     "Horizon": {
         	"Hydrotransport": {
 				"wearCoefficient": 350,
@@ -388,7 +384,7 @@ AVERAGE DUTY Conditions - Metric
             "avgHead": ""
         }
     }
-}*/
+}
 
 
 	//Loading Metric by default 
