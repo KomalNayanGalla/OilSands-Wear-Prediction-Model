@@ -1,0 +1,32 @@
+{
+  "UHTP60083*": {
+    "Eye Diameter": 695,
+    "ID Thickness": 100,
+    "OD Thickness": 116
+  },
+  "UHTP65083RS*": {
+    "Eye Diameter": 695,
+    "ID Thickness": 1140,
+    "OD Thickness": 720
+  },
+  "UHTP60083-3*": {
+    "Eye Diameter": 695,
+    "ID Thickness": 1140,
+    "OD Thickness": 720
+  },
+  "UHTP60083R3*": {
+    "Eye Diameter": 695,
+    "ID Thickness": 1140,
+    "OD Thickness": 720
+  },
+  "HTPU55083RE*": {
+    "Eye Diameter": 695,
+    "ID Thickness": 1140,
+    "OD Thickness": 720
+  },
+  "UHTP50083*": {
+    "Eye Diameter": 695,
+    "ID Thickness": 1140,
+    "OD Thickness": 720
+  }
+}
