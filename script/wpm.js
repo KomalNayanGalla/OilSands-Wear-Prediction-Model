@@ -1,5 +1,5 @@
 	let impellerData = {};
-	fetch('./json/ImpellerDimensions.json')
+	fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json')
 	  .then(response => {
 		if (!response.ok) {
 		  throw new Error('Failed to load impeller data');
