@@ -24,7 +24,7 @@
 	  })
 	  .then(data => {
 		dutyConditions = data;
-		//loadMetric(); // or any other function that depends on impellerData
+		loadMetric(); 
 	  })
 	  .catch(error => {
 		console.error('Error loading duty conditions:', error);
