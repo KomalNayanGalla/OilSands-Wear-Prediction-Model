@@ -1,18 +1,25 @@
 	let impellerData = {};
-	fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json')
-	  .then(response => {
-		if (!response.ok) {
-		  throw new Error('Failed to load impeller data');
-		}
-		return response.json();
+	let dutyConditions = {};
+
+	Promise.all([
+	  fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json').then(res => {
+		if (!res.ok) throw new Error('Failed to load impeller data');
+		return res.json();
+	  }),
+	  fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json').then(res => {
+		if (!res.ok) throw new Error('Failed to load duty conditions');
+		return res.json();
 	  })
-	  .then(data => {
-		impellerData = data;
-		loadMetric(); // or any other function that depends on impellerData
-	  })
-	  .catch(error => {
-		console.error('Error loading impeller data:', error);
-	  });
+	])
+	.then(([impellerDataResponse, dutyConditionsResponse]) => {
+	  impellerData = impellerDataResponse;
+	  dutyConditions = dutyConditionsResponse;
+	  loadMetric(); // Safe to call 
+	})
+	.catch(error => {
+	  console.error('Error loading data:', error);
+	});
+
 
 	
 	const buttonImperial = document.getElementById('buttonImperial');
@@ -150,7 +157,7 @@ AVERAGE DUTY Conditions - Metric
 +------------+--------+
 */
 
-const dutyConditions = {
+/*const dutyConditions = {
     "Horizon": {
         	"Hydrotransport": {
 				"wearCoefficient": 350,
@@ -381,7 +388,7 @@ const dutyConditions = {
             "avgHead": ""
         }
     }
-}
+}*/
 
 
 	//Loading Metric by default 
