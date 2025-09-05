@@ -45,7 +45,7 @@ The **OilSands Wear Prediction Model** is a web-based application designed to pr
   Dimensions and Duty Conditions (also known as **Process Parameters**) are stored in **JSON format** within the script section of the HTML file.
 
 - **Note:**  
-  Due to **organizational policies**, external script files could not be used. All scripts and data are embedded directly in the HTML.
+  Due to **organizational policies**, external script and JSON files **could not** be used on local PC. All scripts and data can embedded directly in the HTML for testing. **Github-Pages** hosted application **can** use external scripts and JSON files.
 
 ---
 
