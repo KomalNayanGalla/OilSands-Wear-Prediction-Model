@@ -4,15 +4,11 @@
 	async function loadData() {
 	  try {
 		const impellerRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json');
-
 		if (!impellerRes.ok) throw new Error('Impeller data failed to load');
-
 		impellerData = await impellerRes.json();
 		
 		const dutyRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json');
-
 		if (!dutyRes.ok) throw new Error('duty conditions failed to load');
-
 		dutyConditions = await dutyRes.json();
 
 		loadMetric(); // Only called once, after both are loaded
