@@ -524,7 +524,7 @@ AVERAGE DUTY Conditions - Metric
 				{
 					goalSeekWCs.push((goalSeekHours[i] - goalSeekHours[i-1])/(0.0394 * (goalSeekVLs[i-1] - goalSeekVLs[i]) * (5000 / averageTonnage) * Math.pow(15.4 / goalSeekImpacts[i-1], exponent)));
 				}
-				//window.alert('GoalSeek WCs : '+goalSeekWCs);
+				window.alert('GoalSeek WCs : '+goalSeekWCs);
 			}
 			
 			//WC Average Calculation
