@@ -1,11 +1,38 @@
-const buttonImperial = document.getElementById('buttonImperial');
+	let throatbushData = {};
+	let impellerData = {};
+	let compatibilityMap = {};
+	
+	async function loadData() {
+	  try {
+		const tbRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ThroatbushDimensions.json');
+		if (!tbRes.ok) throw new Error('Throatbush data failed to load');
+		throatbushData = await tbRes.json();
+
+		const impRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json');
+		if (!impRes.ok) throw new Error('Impeller data failed to load');
+		impellerData = await impRes.json();
+
+		const compatRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/TB_IMP_Compatibility.json');
+		if (!compatRes.ok) throw new Error('Compatibility map failed to load');
+		compatibilityMap = await compatRes.json();
+
+		loadMetric(); // Call after all data is loaded
+	  } catch (error) {
+		console.error('Data loading error:', error);
+	  }
+	}
+	
+	loadData();
+
+
+	const buttonImperial = document.getElementById('buttonImperial');
     const buttonMetric = document.getElementById('buttonMetric');
 	const measures = document.getElementsByClassName("measure");
 	
 	var metricFlag = 1;	
 	
 	//TB-IMP Compatibility
-	const compatibilityMap = {
+/*	const compatibilityMap = {
 		"UHTP60083*": ["UHTP60145*"],
 		"UHTP60083-3*": ["UHTP60145E2*","UHTP60145E4*","UHTP60145HY*","UHTP60145E5*"],
 		"UHTP60083R3*": ["UHTP60145RE1*"],
@@ -153,7 +180,7 @@ const buttonImperial = document.getElementById('buttonImperial');
             "OD Thickness": 115
         }
     };
-
+*/
 	/*
 	AVERAGE DUTY Conditions - Metric
 	+------------+--------+
