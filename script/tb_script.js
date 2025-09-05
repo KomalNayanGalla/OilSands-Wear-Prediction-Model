@@ -1,6 +1,7 @@
 	let throatbushData = {};
 	let impellerData = {};
 	let compatibilityMap = {};
+	let dutyConditions = {};
 	
 	async function loadData() {
 	  try {
@@ -15,6 +16,10 @@
 		const compatRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/TB_IMP_Compatibility.json');
 		if (!compatRes.ok) throw new Error('Compatibility map failed to load');
 		compatibilityMap = await compatRes.json();
+		
+		const dutyRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json');
+		if (!dutyRes.ok) throw new Error('duty conditions failed to load');
+		dutyConditions = await dutyRes.json();
 
 		loadMetric(); // Call after all data is loaded
 	  } catch (error) {
@@ -41,10 +46,11 @@
 	|    SG      |  none  |
 	|  avgFlow   |  m3/hr |
 	| wearCoeff. |  none  |
+	|   avgD50   |   μm   |	
 	+------------+--------+
 	*/
 	
-	const dutyConditions = {
+	/*const dutyConditions = {
 		"Horizon": {
 			"Hydrotransport": {
 				"wearCoefficient": 350,
@@ -305,7 +311,7 @@
 				"avgD50": ""
 			}
 		}
-	};
+	};*/
 	
 	//Loading Metric by default 
 	function loadMetric()
