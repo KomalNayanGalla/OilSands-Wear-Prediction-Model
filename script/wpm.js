@@ -532,7 +532,7 @@ AVERAGE DUTY Conditions - Metric
 		if(!validateAnalyse())
 		{
 			return;
-		};
+		}
 		vaneLengths = [];
 		var bestCaseHours = [];
 		var worstCaseHours = [];
