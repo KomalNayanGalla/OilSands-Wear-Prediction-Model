@@ -529,7 +529,10 @@ AVERAGE DUTY Conditions - Metric
 	//Calculate VLs,Impacts, Hours and display graph
 	function analyse() 
 	{
-		validateAnalyse();
+		if(!validateAnalyse())
+		{
+			return;
+		};
 		vaneLengths = [];
 		var bestCaseHours = [];
 		var worstCaseHours = [];
