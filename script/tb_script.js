@@ -5,19 +5,19 @@
 	
 	async function loadData() {
 	  try {
-		const tbRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ThroatbushDimensions.json');
+		const tbRes = await fetch('./json/ThroatbushDimensions.json');
 		if (!tbRes.ok) throw new Error('Throatbush data failed to load');
 		throatbushData = await tbRes.json();
 
-		const impRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json');
+		const impRes = await fetch('./json/ImpellerDimensions.json');
 		if (!impRes.ok) throw new Error('Impeller data failed to load');
 		impellerData = await impRes.json();
 
-		const compatRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/TB_IMP_Compatibility.json');
+		const compatRes = await fetch('./json/TB_IMP_Compatibility.json');
 		if (!compatRes.ok) throw new Error('Compatibility map failed to load');
 		compatibilityMap = await compatRes.json();
 		
-		const dutyRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json');
+		const dutyRes = await fetch('./json/dutyConditions.json');
 		if (!dutyRes.ok) throw new Error('duty conditions failed to load');
 		dutyConditions = await dutyRes.json();
 

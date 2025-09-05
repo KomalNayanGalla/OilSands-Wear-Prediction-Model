@@ -7,7 +7,7 @@
 		if (!impellerRes.ok) throw new Error('Impeller data failed to load');
 		impellerData = await impellerRes.json();
 		
-		const dutyRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/dutyConditions.json');
+		const dutyRes = await fetch('./json/dutyConditions.json');
 		if (!dutyRes.ok) throw new Error('duty conditions failed to load');
 		dutyConditions = await dutyRes.json();
 
