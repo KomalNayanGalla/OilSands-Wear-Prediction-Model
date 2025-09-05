@@ -117,6 +117,11 @@ AVERAGE DUTY Conditions - Metric
 			window.alert("No data found for selected combination.");
 		  }
 		}
+		
+		if(analysisFlag == 1)
+		{
+			analyse();
+		}		
 	}
 		
 		 
@@ -140,6 +145,11 @@ AVERAGE DUTY Conditions - Metric
 			document.getElementById("failureVaneLength").value = (impellerDetails["Nominal Vane Length"]*0.4).toFixed(2);
 			document.getElementById("impellerID").value = (impellerDetails["Impeller ID"]).toFixed(2);
 			document.getElementById("impellerOD").value = (impellerDetails["Impeller OD"]).toFixed(2);
+			}
+			
+			if(analysisFlag == 1)
+			{
+				analyse();
 			}
 	    });
 
@@ -529,10 +539,7 @@ AVERAGE DUTY Conditions - Metric
 	//Calculate VLs,Impacts, Hours and display graph
 	function analyse() 
 	{
-		if(!validateAnalyse())
-		{
-			return;
-		}
+		validateAnalyse();
 		vaneLengths = [];
 		var bestCaseHours = [];
 		var worstCaseHours = [];
@@ -542,7 +549,6 @@ AVERAGE DUTY Conditions - Metric
 		const isMobile = window.innerWidth < 768;
 		const fontSize = isMobile ? 12 : 20;
 		
-
 		analysisFlag = 1;
 
 		// Reference values
