@@ -124,10 +124,6 @@
 			document.getElementById("impellerOD").value = (impellerDetails["Impeller OD"]).toFixed(2);
 			}
 			
-			if(analysisFlag == 1)
-			{
-				analyse();
-			}
 	 });
 	
 	//Throatbush Dropdown - TB Dimensions
@@ -165,10 +161,6 @@
 			document.getElementById("throatbushOD").value = (tbDetails["OD Thickness"]).toFixed(2);
 			}
 			
-			if(analysisFlag == 1)
-			{
-				analyse();
-			}
 	    });
 	
 	//Mine Site - Applications - Duty Conditions Reactions
