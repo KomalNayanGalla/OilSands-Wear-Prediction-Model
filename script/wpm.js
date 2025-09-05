@@ -3,7 +3,7 @@
 
 	async function loadData() {
 	  try {
-		const impellerRes = await fetch('https://komalnayangalla.github.io/OilSands-Wear-Prediction-Model/json/ImpellerDimensions.json');
+		const impellerRes = await fetch('./json/ImpellerDimensions.json');
 		if (!impellerRes.ok) throw new Error('Impeller data failed to load');
 		impellerData = await impellerRes.json();
 		
