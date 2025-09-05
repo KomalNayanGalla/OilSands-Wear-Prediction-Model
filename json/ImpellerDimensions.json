@@ -1,104 +1,116 @@
 {
-  "UHTP60145*": {
-    "Eye Diameter": 720,
-    "Nominal Vane Length": 1140,
-    "Impeller ID": 720,
-    "Impeller OD": 1575
-  },
-  "UHTP60145E2*": {
-    "Eye Diameter": 720,
-    "Nominal Vane Length": 1310,
-    "Impeller ID": 720,
-    "Impeller OD": 1575
-  },
-  "UHTP60145RE1*": {
-    "Eye Diameter": 625,
-    "Nominal Vane Length": 1380,
-    "Impeller ID": 625,
-    "Impeller OD": 1575
-  },
-  "UHTP60145E4*": {
-    "Eye Diameter": 720,
-    "Nominal Vane Length": 1300,
-    "Impeller ID": 720,
-    "Impeller OD": 1575
-  },
-  "UHTP60145R4*": {
-    "Eye Diameter": 625,
-    "Nominal Vane Length": 1300,
-    "Impeller ID": 625,
-    "Impeller OD": 1575
-  },
-  "UHTP60145HY*": {
-    "Eye Diameter": 720,
-    "Nominal Vane Length": 1184,
-    "Impeller ID": 720,
-    "Impeller OD": 1575
-  },
-  "UHTP60136E4*": {
-    "Eye Diameter": 720,
-    "Nominal Vane Length": 1501,
-    "Impeller ID": 720,
-    "Impeller OD": 1575
-  },
-  "UHTP60136R4*": {
-    "Eye Diameter": 625,
-    "Nominal Vane Length": 1501,
-    "Impeller ID": 625,
-    "Impeller OD": 1575
-  },
-  "UHTP60145E5*": {
-    "Eye Diameter": 720,
-    "Nominal Vane Length": 1260,
-    "Impeller ID": 720,
-    "Impeller OD": 1575
-  },
-  "UHTP65145RE*": {
-    "Eye Diameter": 710,
-    "Nominal Vane Length": 1950,
-    "Impeller ID": 710,
-    "Impeller OD": 1880
-  },
-  "UHTP65145E94R*": {
-    "Eye Diameter": 710,
-    "Nominal Vane Length": 1790,
-    "Impeller ID": 710,
-    "Impeller OD": 1880
-  },
-  "UHTP65145R3E94*": {
-    "Eye Diameter": 710,
-    "Nominal Vane Length": 1785,
-    "Impeller ID": 710,
-    "Impeller OD": 1880
-  },
-  "UHTP65145REE92*": {
-    "Eye Diameter": 710,
-    "Nominal Vane Length": 1795,
-    "Impeller ID": 710,
-    "Impeller OD": 1880
-  },
-  "HTPU55145*": {
-    "Eye Diameter": 625,
-    "Nominal Vane Length": 1109,
-    "Impeller ID": 625,
-    "Impeller OD": 1525
-  },
-  "UHTP50145*": {
-    "Eye Diameter": 610,
-    "Nominal Vane Length": 1020,
-    "Impeller ID": 610,
-    "Impeller OD": 1425
-  },
-  "UHTP50145BF1WC*": {
-    "Eye Diameter": 610,
-    "Nominal Vane Length": 1030,
-    "Impeller ID": 610,
-    "Impeller OD": 1425
-  },
-  "UHTP50145-0001*": {
-    "Eye Diameter": 610,
-    "Nominal Vane Length": 995,
-    "Impeller ID": 610,
-    "Impeller OD": 1354
-  }
+   "UHTP60145*": {
+		   "Eye Diameter": 720,
+		   "Nominal Vane Length": 1145,
+		   "Impeller ID": 720,
+		   "Impeller OD": 1575
+	 },
+	"UHTP60145E2*": { 
+		"Eye Diameter": 720,
+		"Nominal Vane Length": 1305,
+		"Impeller ID": 720,
+		"Impeller OD": 1575
+	},
+	"UHTP60145RE1*": { 
+		"Eye Diameter": 625,
+		"Nominal Vane Length": 1385,
+		"Impeller ID": 625,
+		"Impeller OD": 1575
+	},
+	"UHTP60145E4*": { 
+		"Eye Diameter": 720,
+		"Nominal Vane Length": 1295,
+		"Impeller ID": 720,
+		"Impeller OD": 1575
+	},
+	"UHTP60145R4*": { 
+		"Eye Diameter": 625,
+		"Nominal Vane Length": 1295,
+		"Impeller ID": 625,
+		"Impeller OD": 1575
+	},
+	"UHTP60145HY*": { 
+		"Eye Diameter": 720,
+		"Nominal Vane Length": 1305,
+		"Impeller ID": 720,
+		"Impeller OD": 1575
+	},
+	"UHTP60136E4*": { 
+		"Eye Diameter": 720,
+		"Nominal Vane Length": 1595,
+		"Impeller ID": 720,
+		"Impeller OD": 1575
+	},
+	"UHTP60136R4*": { 
+		"Eye Diameter": 625,
+		"Nominal Vane Length": 1595,
+		"Impeller ID": 625,
+		"Impeller OD": 1575
+	},
+	"UHTP60145E5*": { 
+		"Eye Diameter": 720,
+		"Nominal Vane Length": 1260,
+		"Impeller ID": 720,
+		"Impeller OD": 1575
+	},
+	"UHTP65145RE*": {
+		"Eye Diameter": 710,
+		"Nominal Vane Length": 1945,
+		"Impeller ID": 710,
+		"Impeller OD": 1880
+	},
+	"UHTP65145E94R*": {
+		"Eye Diameter": 710,
+		"Nominal Vane Length": 1800,
+		"Impeller ID": 710,
+		"Impeller OD": 1880
+	},
+	"UHTP65145R3E94*": {
+		"Eye Diameter": 710,
+		"Nominal Vane Length": 1780,
+		"Impeller ID": 710,
+		"Impeller OD": 1880
+	},
+	"UHTP65145REE92*": {
+		"Eye Diameter": 710,
+		"Nominal Vane Length": 1800,
+		"Impeller ID": 710,
+		"Impeller OD": 1880
+	},
+	"HTPU55145*": { 
+		"Eye Diameter": 625,
+		"Nominal Vane Length": 1240,
+		"Impeller ID": 625,
+		"Impeller OD": 1525
+	},
+	"HTPU55145-1*": { 
+		"Eye Diameter": 625,
+		"Nominal Vane Length": 1255,
+		"Impeller ID": 625,
+		"Impeller OD": 1525
+	},
+	"HTPU55145-2*": { 
+		"Eye Diameter": 625,
+		"Nominal Vane Length": 1250,
+		"Impeller ID": 625,
+		"Impeller OD": 1525
+	},
+	"UHTP50145*": { 
+		"Eye Diameter": 610,
+		"Nominal Vane Length": 1040,
+		"Impeller ID": 610,
+		"Impeller OD": 1425
+	},
+	"UHTP50145BF1WC*": { 
+		"Eye Diameter": 610,
+		"Nominal Vane Length": 1040,
+		"Impeller ID": 610,
+		"Impeller OD": 1425
+	},
+	"UHTP50145-001*": { 
+		"Eye Diameter": 610,
+		"Nominal Vane Length": 1015,
+		"Impeller ID": 610,
+		"Impeller OD": 1354
+	}
 }
