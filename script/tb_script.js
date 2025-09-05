@@ -35,7 +35,7 @@
 	const measures = document.getElementsByClassName("measure");
 	
 	var metricFlag = 1;	
-	
+	var analysisFlag = 0;	
 	/*
 	AVERAGE DUTY Conditions - Metric
 	+------------+--------+
@@ -123,6 +123,11 @@
 			{
 			document.getElementById("impellerOD").value = (impellerDetails["Impeller OD"]).toFixed(2);
 			}
+			
+			if(analysisFlag == 1)
+			{
+				analyse();
+			}
 	 });
 	
 	//Throatbush Dropdown - TB Dimensions
@@ -158,6 +163,11 @@
 			document.getElementById("eyeDiameter").value = (tbDetails["Eye Diameter"]).toFixed(2);
 			document.getElementById("throatbushID").value = (tbDetails["ID Thickness"]).toFixed(2);
 			document.getElementById("throatbushOD").value = (tbDetails["OD Thickness"]).toFixed(2);
+			}
+			
+			if(analysisFlag == 1)
+			{
+				analyse();
 			}
 	    });
 	
@@ -202,6 +212,11 @@
 		  {
 			window.alert("No data found for selected combination.");
 		  }
+		}
+		
+		if(analysisFlag == 1)
+		{
+			analyse();
 		}
 	}
 	
@@ -412,7 +427,7 @@
 			var refEyeTipSpeed = 13;
 			var refImpTipSpeed = 30;
 			
-			
+			analysisFlag = 1;			
 			
 			var averageFlow = parseFloat(document.getElementById("avgFlow").value);
 			var eyeDiameter = parseFloat(document.getElementById("eyeDiameter").value);
