@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/wpm.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body onload="loadInches()">
+<body onload="loadMetric()">
     <div class="container">
         <div class="hamburger" onclick="toggleMenu()"><b id="menuTitle">MENU  </b><i class="fa fa-bars" style="font-size:24px;"></i></div>
 		<div class="hamburger-menu" id="hamburgerMenu">
@@ -23,16 +23,7 @@
             <button class="button" id="buttonMetric">Metric</button>
         </div>
 	</div>
-	<script>
-	const buttonImperial = document.getElementById('buttonImperial');
-    const buttonMetric = document.getElementById('buttonMetric');
-	const measures = document.getElementsByClassName("measure");
-	
-	//Toggle Hamburger menu
-	function toggleMenu() {
-		const menu = document.getElementById("hamburgerMenu");
-		menu.classList.toggle("show");
-	}	
-	</script>
+	<script src="./script/tb_script.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>	
 </body>
 </html>	
