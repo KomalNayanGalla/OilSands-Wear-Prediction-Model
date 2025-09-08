@@ -86,20 +86,6 @@
 		//Disabling Impeller Dropdown until a Throatbush is selected
 		document.getElementById('impIPNDropdown').selectedIndex = 0;
 		document.getElementById('impIPNDropdown').disabled = true;
-		
-		// Define links and animation before using them
-	    const links = document.querySelectorAll('nav a');
-	    const animation = document.querySelector('.animation');
-
-	    links.forEach(link => link.classList.remove('active'));
-
-	    const throatbushTab = Array.from(links).find(link => link.textContent.trim() === 'THROATBUSH');
-	    if (throatbushTab) {
-	        throatbushTab.classList.add('active');
-	        animation.style.width = '120px';
-	        animation.style.left = '120px';
-	        animation.style.backgroundColor = '#e74c3c';
-	    }
 
 	}
 	
