@@ -677,8 +677,8 @@ AVERAGE DUTY Conditions - Metric
 						{
 							label: 'Hours',
 							data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-							borderColor: 'black',
-							borderWidth: 2,
+							borderColor: '#002E5D',
+							borderWidth: 1,
 							lineTension: 0.4,
 							pointStyle: 'triangle'
 						},
@@ -727,7 +727,7 @@ AVERAGE DUTY Conditions - Metric
 							},
 							grid: {
 								display: true,
-								color: '#ABA9A7'
+								color: '#D4D3D2'
 							}
 						},
 						y: {
@@ -746,7 +746,7 @@ AVERAGE DUTY Conditions - Metric
 							},
 							grid: {
 								display: true,
-								color: '#ABA9A7'
+								color: '#D4D3D2'
 							}
 						}
 					},

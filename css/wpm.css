@@ -24,7 +24,7 @@ canvas {
 
 th {
    background-color: #005EB8;
-   color: #de3163; 
+   color: white; 
 }
 
 input[type="text"].process-parameter {
@@ -125,8 +125,8 @@ label {
 }
 .button {
    background-color: white;
-   color: purple;
-   border: 2px solid purple;
+   color: #337EC6;
+   border: 2px solid #337EC6;
    width: 100px;
    padding: 10px 20px;
    cursor: pointer;
@@ -280,7 +280,7 @@ label {
 }
 
 .hamburger-menu a:hover {
-  background-color: #007DF88;
+  background-color: #007D88;
   color: #CCEDF0;
   border-radius: 4px;
 }
