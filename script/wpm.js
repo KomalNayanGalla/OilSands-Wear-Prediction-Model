@@ -677,7 +677,7 @@ AVERAGE DUTY Conditions - Metric
 						{
 							label: 'Hours',
 							data: Hours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-							borderColor: 'white',
+							borderColor: 'black',
 							borderWidth: 2,
 							lineTension: 0.4,
 							pointStyle: 'triangle'
@@ -685,14 +685,14 @@ AVERAGE DUTY Conditions - Metric
 						{
 							label: 'Best Case Hours',
 							data: bestCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-							borderColor: 'lime',
+							borderColor: '#4B9560',
 							borderWidth: 1,
 							lineTension: 0.4
 						},
 						{
 							label: 'Worst Case Hours',
 							data: worstCaseHours.map((hour, index) => ({ x: hour, y: vaneLengths[index] })),
-							borderColor: '#f7f749',
+							borderColor: '#F96D7E',
 							borderWidth: 1,
 							lineTension: 0.4
 						}
@@ -713,47 +713,47 @@ AVERAGE DUTY Conditions - Metric
 							title: {
 								display: true,
 								text: 'Hours',
-								color: '#F2D2BD',
+								color: '#3D3936',
 								font: { size: fontSize }
 							},
 							min: xMin,
 							max: xMax,
 							ticks: {
 								stepSize: xStepSize,
-								color: 'white',
+								color: '#5F5C59',
 								align: 'center',
 								padding: 0,
 								font: { size: fontSize - 2 }
 							},
 							grid: {
 								display: true,
-								color: '#A9A9A9'
+								color: '#ABA9A7'
 							}
 						},
 						y: {
 							title: {
 								display: true,
 								text: 'Vane Length',
-								color: 'white',
+								color: '#3D3936',
 								font: { size: fontSize }
 							},
 							min: yMin,
 							max: yMax,
 							ticks: {
 								stepSize: yStepSize,
-								color: 'white',
+								color: '#5F5C59',
 								font: { size: fontSize - 2 }
 							},
 							grid: {
 								display: true,
-								color: '#A9A9A9'
+								color: '#ABA9A7'
 							}
 						}
 					},
 					plugins: {
 						legend: {
 							labels: {
-								color: 'white',
+								color: '#5F5C59',
 								font: { size: fontSize - 2}
 							}
 						},
