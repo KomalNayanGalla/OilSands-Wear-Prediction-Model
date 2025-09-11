@@ -270,10 +270,10 @@ AVERAGE DUTY Conditions - Metric
 				document.getElementById("avgHead").placeholder = 'Input Average Head';
 				
 				//border styles
-				document.getElementById("avgRPM").style.border = '1px solid yellow';
-				document.getElementById("avgFlow").style.border = '1px solid yellow';
-				document.getElementById("SG").style.border = '1px solid yellow';
-				document.getElementById("avgHead").style.border = '1px solid yellow';
+				document.getElementById("avgRPM").style.backgroundColor = '#FDF2CC';
+				document.getElementById("avgFlow").style.backgroundColor = '#FDF2CC';
+				document.getElementById("SG").style.backgroundColor = '#FDF2CC';
+				document.getElementById("avgHead").style.backgroundColor = '#FDF2CC';
 				
 				//Resetting and Disabling Application and Mine Site Dropdowns
 				document.getElementById('siteDropdown').selectedIndex = 0;
@@ -294,10 +294,10 @@ AVERAGE DUTY Conditions - Metric
 				document.getElementById("avgHead").placeholder = 'extracted or custom';
 				
 				//border styles
-				document.getElementById("avgRPM").style.border = '1px solid red';
-				document.getElementById("avgFlow").style.border = '1px solid red';
-				document.getElementById("SG").style.border = '1px solid red';
-				document.getElementById("avgHead").style.border = '1px solid red';				
+				document.getElementById("avgRPM").style.backgroundColor = '#F6B6BF';
+				document.getElementById("avgFlow").style.backgroundColor = '#F6B6BF';
+				document.getElementById("SG").style.backgroundColor = '#F6B6BF';
+				document.getElementById("avgHead").style.backgroundColor = '#F6B6BF';				
 				
 				//enabling mine site and Application Dropdowns
 				document.getElementById('applicationDropdown').disabled = false;

@@ -28,7 +28,7 @@ th {
 }
 
 input[type="text"].process-parameter {
-   border: 1px solid red;
+   background-color: #F6B6BF;
 }
 
 :root {
@@ -39,7 +39,7 @@ input[type="text"].process-parameter {
 }
 
 select {
-   background-color: #702082;
+   background-color: #5F5C59;
    border-radius: 8px;
    color: white;
    padding: 10px;
@@ -98,12 +98,11 @@ select:focus {
 }
 
 input[type="text"].disabled {
-   border: 1px solid red;
    color: #BA3647;
+   background-color: #F6B6BF;
 }
 
 input[type="text"] {
-   background-color: #CCDFF1; 
    color: black; 
 }
 
